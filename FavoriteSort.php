@@ -12,11 +12,11 @@ if ($_POST["itemID"] != null) {
             <div class="card mb-3" style="max-width: 540px;">
                 <div class="row no-gutters">
                     <div class="col-md-4">
-                        <a target="_blank" class="mb-4" href="ItemView.php?product= <?=$row["ID"]?>">
+                        <a class="mb-4" href="ItemView.php?product= <?=$row["ID"]?>">
                             <img src="Images/Clothing/<?=$row["Front_IMG"]?>" class="card-img-top mt-4 mb-4" alt="...">
                         </a>
                     </div>
-                    <div class="col-md-8" style="background: #f5f5f5">
+                    <div class="col-md-8">
                             <div class="top-right">
                                 <a onclick="addFavorite(<?=$row["ID"]?>)" id="<?="addHeart" . $row["ID"]?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
@@ -29,7 +29,7 @@ if ($_POST["itemID"] != null) {
                                     </svg>
                                 </a>
                             </div>
-                        <div class="card-body" style="background: #f5f5f5">
+                        <div class="card-body">
                             <p class="card-title text-center"><?= $row["ProductName"]?></p>
                         </div>
                     </div>

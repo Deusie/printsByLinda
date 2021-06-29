@@ -28,7 +28,7 @@ include 'configdb.php';
 <!-- navbar -->
 
 <nav class="navbar navbar-expand-md navbar-dark" style="background-color: black">
-    <a class="navbar-brand" href="index.php">
+    <a class="navbar-brand" href="index.php" onclick="DeleteALlFavorites()">
         <img src="Logos/Copy%20of%20PRINTS%20B%20Y%20LINDA.svg" width="150em" height="100em"  alt="">
     </a>
     <a id="heartIcon" class="d-md-none ml-auto" href="FavoritePage.php">
@@ -262,6 +262,11 @@ while($row = mysqli_fetch_assoc($result))
         // // modalBody.style.color = "#721c24";
         // // modalBody.style.borderColor = "#f5c6cb";
         //favoriteModalOpen();
+    }
+
+    function DeleteALlFavorites() {
+        Favorites.clear();
+        console.log("remove all favorites")
     }
 </script>
 </html>
