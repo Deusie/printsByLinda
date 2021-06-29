@@ -1,0 +1,58 @@
+@media (min-width: 576px) and (max-width: 768px)
+{
+    .card-columns {
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+        column-count: 2;
+    }
+}
+
+.footerLI{
+    background-color: transparent; border: none; padding: 6px 10px 6px 10px;
+}
+
+.footerLI a{
+    color: #a6a6a6;
+    text-decoration: none;
+}
+
+.footerLI a:hover{
+    color: #d2d2d2;
+}
+
+.productInfoContainer{
+    background-color: white;
+    border-bottom: #979797 solid 1px;
+    border-top: #979797 solid 1px;
+}
+
+.productInfo{
+    color: #3d3d3d;
+    text-decoration: none;
+}
+
+.productInfo:hover{
+    color: black;
+    text-decoration: none;
+}
+.productInfo:active{
+    text-decoration: none;
+}
+
+/* Bootstrap 4 text input with search icon */
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
