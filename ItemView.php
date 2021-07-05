@@ -70,9 +70,14 @@ include 'configdb.php';
             <input name="searchField" style="background-color: black; border-radius: 20px 20px 20px 20px;-moz-border-radius: 20px 20px 20px 20px;-webkit-border-radius: 20px 20px 20px 20px;border: 0px solid #000000;" type="text" class="form-control" placeholder="Search">
         </div>
     </form>
-    <a class="d-none d-md-block ml-3" href="FavoritePage.php">
-        <svg style="color: white" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <a href="FavoritePage.php" class="d-none d-md-block">
+        <svg style="color: white" width="1.3em" height="1.3em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+        </svg>
+    </a>
+    <a class="d-none d-md-block ml-4" href="Cart.php">
+        <svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" fill="currentColor" class="bi bi-bag" viewBox="0 0 16 16">
+            <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
         </svg>
     </a>
 </nav>
@@ -173,10 +178,13 @@ if ($row["Back_IMG"] != null){
     </ul>
 
     <hr class="mb-3" style="border: 2px dashed #e0e0e0;">
-    <button type="button" class="btn btn-primary btn-lg mr-2 mt-1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
+    <button onclick="addCart(<?=$row["ID"]?>)"  type="button" class="btn btn-primary btn-lg mr-2 mt-1">
+        <svg id="<?="addCart" . $row["ID"]?>" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"></path>
             <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"></path>
+        </svg>
+        <svg display="none" id="<?="removeCart" . $row["ID"]?>" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check-fill" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zm-.646 5.354a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"></path>
         </svg>
         In winkelwagen
     </button>
@@ -392,6 +400,7 @@ if ($row["Back_IMG"] != null){
         document.getElementById("imageContainerBack").style.display = "none";
     }
     Favorites = window.localStorage;
+    Cart = window.sessionStorage;
 
     $(document).ready(function(){
         for (var i = 0; i < localStorage.length; i++){
@@ -400,7 +409,16 @@ if ($row["Back_IMG"] != null){
                 document.getElementById('addHeart' + localStorage.getItem(localStorage.key(i))).style.display = "none";
             }catch(err) {}
             try{
-                document.getElementById('removeHeart' + localStorage.getItem(localStorage.key(i))).style.display = "block";
+                document.getElementById('removeHeart' + localStorage.getItem(localStorage.key(i))).style.display = "inline";
+            }catch(err) {}
+        }
+        for (var j = 0; j < sessionStorage.length; j++){
+            console.log('addCart' + sessionStorage.getItem(sessionStorage.key(j)));
+            try{
+                document.getElementById('addCart' + sessionStorage.getItem(sessionStorage.key(j))).style.display = "none";
+            }catch(err) {}
+            try{
+                document.getElementById('removeCart' + sessionStorage.getItem(sessionStorage.key(j))).style.display = "inline";
             }catch(err) {}
         }
     });
@@ -409,23 +427,24 @@ if ($row["Back_IMG"] != null){
         Favorites.setItem(favoriteId, favoriteId);
         console.log("added favorite" + favoriteId)
         document.getElementById('addHeart' + favoriteId).style.display = "none";
-        document.getElementById('removeHeart' + favoriteId).style.display = "block";
+        document.getElementById('removeHeart' + favoriteId).style.display = "inline";
         document.getElementById('favoriteModalText').textContent = "Artikel is toegevoegd aan je verlanglijstje";
-        // var modalBody = document.getElementById('modalBody')
-        //favoriteModalOpen();
+    }
+
+    function addCart(cartId) {
+        if (Cart.getItem(cartId) == null){
+            Cart.setItem(cartId, cartId);
+            console.log("added cart" + cartId)
+            document.getElementById('addCart' + cartId).style.display = "none";
+            document.getElementById('removeCart' + cartId).style.display = "inline";
+        }
     }
 
     function deleteFavorite(favoriteId) {
         Favorites.removeItem(favoriteId);
         console.log("removed favorite")
-        document.getElementById('addHeart' + favoriteId).style.display = "block";
+        document.getElementById('addHeart' + favoriteId).style.display = "inline";
         document.getElementById('removeHeart' + favoriteId).style.display = "none";
-        //document.getElementById('favoriteModalText').textContent = "Artikel is verwijderd van u verlanglijstje";
-        // var modalBody = document.getElementById('modalBody')
-        // // modalBody.style.backgroundColor = "#f8d7da";
-        // // modalBody.style.color = "#721c24";
-        // // modalBody.style.borderColor = "#f5c6cb";
-        //favoriteModalOpen();
     }
 </script>
 </html>
