@@ -1,5 +1,5 @@
 <?php
-include 'configdb.php';
+include 'configdbPDO.php';
 ?>
 
 <!DOCTYPE html>
@@ -7,7 +7,7 @@ include 'configdb.php';
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Store</title>
-    <link rel="icon" href="Logos/PRINTS%20B%20Y%20LINDA.png">
+    <link rel="icon" href="Logos/LogosPrints.png">
     <link rel="stylesheet" href="Bootstrap%20pure/Style.css">
     <script src="Bootstrap%20pure/b1.js"></script>
     <script src="Bootstrap%20pure/b2.js"></script>
@@ -114,15 +114,12 @@ include 'configdb.php';
     </div>
 </div>
     <?php
-    $sql = "SELECT * FROM `product` ORDER BY `ID` DESC";
-    $result = mysqli_query($con,$sql);
+    $data = $conn->query("SELECT * FROM product")->fetchAll();
 
     echo '<div class="container mb-5 mt-3">';
     echo '<div id="storeContent" class="row">';
 
-    while($row = mysqli_fetch_assoc($result))
-    {
-        ?>
+    foreach ($data as $row) {?>
         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6 mb-5">
             <div class="card h-100">
                 <?php
@@ -236,7 +233,7 @@ include 'configdb.php';
             var order = $(this).data("order");
             $( "#dropdownMenuButton" ).html($(this).html());
             $.ajax({
-                url:"sort.php",
+                url:"storeSort.php",
                 method:"POST",
                 data:{column_name:column_name, order:order},
                 success:function(data)

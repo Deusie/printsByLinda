@@ -81,10 +81,8 @@ include 'configdb.php';
 </nav>
 
 
-<div class="container mt-4 mb-5 mx-auto" >
-    <div class="row" id="dropCont">
+<div id="dropCont" class="container mt-4 mb-5 mx-auto" >
 
-    </div>
 </div>
 
 <footer class="container-fluid pt-3 pb-5 fixed-bottom" style="background-color: #535353;">
@@ -132,6 +130,7 @@ include 'configdb.php';
         console.log("removed Cart");
         runQuery();
     }
+
 </script>
 </html>
 

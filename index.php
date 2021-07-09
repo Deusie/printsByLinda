@@ -1,5 +1,5 @@
 <?php
-include 'configdb.php';
+include 'configdbPDO.php';
 ?>
 
 <!DOCTYPE html>
@@ -7,7 +7,7 @@ include 'configdb.php';
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>Prints by Linda</title>
-    <link rel="icon" href="Logos/PRINTS%20B%20Y%20LINDA.png">
+    <link rel="icon" href="Logos/LogosPrints.png">
     <link rel="stylesheet" href="Bootstrap%20pure/Style.css">
     <script src="Bootstrap%20pure/b1.js"></script>
     <script src="Bootstrap%20pure/b2.js"></script>
@@ -93,113 +93,107 @@ include 'configdb.php';
     </a>
 </nav>
 <div class="container-fluid p-0">
-<div class="container-fluid p-0 d-none d-md-block">
-    <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="Banner/Print.png" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block">
-                    <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
+    <div class="container-fluid p-0 d-none d-md-block">
+        <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="Banner/Print.png" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
+                    </div>
                 </div>
-            </div>
-            <div class="carousel-item">
-                <img src="Banner/printss.png" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block">
-                    <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
+                <div class="carousel-item">
+                    <img src="Banner/printss.png" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
+                    </div>
                 </div>
-            </div>
-            <div class="carousel-item">
-                <img src="Banner/Canva%20-%20Silhouette%20of%20Two%20People%20Standing%20on%20Seashore%20During%20Sunset.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block">
-                    <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid p-0 d-md-none">
-    <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="Banner/couple-690047_1920.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption">
-                    <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="Banner/couple-690047_1920.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption">
-                    <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="Banner/couple-690047_1920.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption">
-                    <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
+                <div class="carousel-item">
+                    <img src="Banner/Canva%20-%20Silhouette%20of%20Two%20People%20Standing%20on%20Seashore%20During%20Sunset.jpg" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="container-fluid p-0 d-md-none">
+        <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="Banner/couple-690047_1920.jpg" class="d-block w-100" alt="...">
+                    <div class="carousel-caption">
+                        <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="Banner/couple-690047_1920.jpg" class="d-block w-100" alt="...">
+                    <div class="carousel-caption">
+                        <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="Banner/couple-690047_1920.jpg" class="d-block w-100" alt="...">
+                    <div class="carousel-caption">
+                        <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-<!-- store -->
+    <!-- store -->
 
 <?php
-$sql = "SELECT * FROM `product` ORDER BY `ID` ASC";
-$result = mysqli_query($con,$sql);
+$data = $conn->query("SELECT * FROM product")->fetchAll();
 
 echo '<div class="container mb-5 mt-5">';
-echo '<div id="storeContent" class="row">';
-echo '<div class="card-columns">';
-
-while($row = mysqli_fetch_assoc($result))
-{
-    ?>
-    <div class="card">
-        <a id="<?="front" . $row["ID"]?>" href="ItemView.php?product= <?=$row["ID"]?>">
-            <img src="Images/Clothing/<?=$row["Front_IMG"]?>" class="card-img-top" alt="...">
-        </a>
-        <a id="<?="back" . $row["ID"]?>" style="display: none;" href="ItemView.php?product= <?=$row["ID"]?>">
-            <img src="Images/Clothing/<?=$row["Back_IMG"]?>" class="card-img-top" alt="...">
-        </a>
-        <div class="card-body">
-            <?php
-            if ($row["Back_IMG"] != "Template-back.png"){
-                ?>
-            <a onclick="changeToBack(<?=$row["ID"]?>)">
-                <img src="Images/Clothing/<?=$row["Front_IMG"]?>" alt="..." height="50px" width="50px">
-            </a>
-            <a onclick="changeToFront(<?=$row["ID"]?>)">
-                <img src="Images/Clothing/<?=$row["Back_IMG"]?>" alt="..." height="50px" width="50px">
-            </a>
-                <?php
-            }
-            ?>
-            <h5 class="card-title text-center"><?=$row["ProductName"]?></h5>
-            <h5 class="card-title text-center"><?=$row["Price"]?>€</h5>
-        </div>
-        <div class="top-right">
-            <a onclick="addFavorite(<?=$row["ID"]?>)" id="<?="addHeart" . $row["ID"]?>" data-toggle="modal" data-target="#favoriteModal">
-                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                </svg>
-            </a>
-            <a onclick="deleteFavorite(<?=$row["ID"]?>)" id="<?="removeHeart" . $row["ID"]?>" style="display: none">
-                <svg style="color: #ca1d1d" width="1.1rem" height="1.1rem" viewBox="0 0 16 16" class="bi bi-heart-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                </svg>
-            </a>
+    echo '<div id="storeContent" class="row">';
+        echo '<div class="card-columns">';
+            foreach ($data as $row) {?>
+                <div class="card">
+                    <a id="<?="front" . $row["ID"]?>" href="ItemView.php?product= <?=$row["ID"]?>">
+                        <img src="Images/Clothing/<?=$row["Front_IMG"]?>" class="card-img-top" alt="...">
+                    </a>
+                    <a id="<?="back" . $row["ID"]?>" style="display: none;" href="ItemView.php?product= <?=$row["ID"]?>">
+                        <img src="Images/Clothing/<?=$row["Back_IMG"]?>" class="card-img-top" alt="...">
+                    </a>
+                    <div class="card-body">
+                        <?php
+                        if ($row["Back_IMG"] != "Template-back.png"){
+                            ?>
+                            <a onclick="changeToBack(<?=$row["ID"]?>)">
+                                <img src="Images/Clothing/<?=$row["Front_IMG"]?>" alt="..." height="50px" width="50px">
+                            </a>
+                            <a onclick="changeToFront(<?=$row["ID"]?>)">
+                                <img src="Images/Clothing/<?=$row["Back_IMG"]?>" alt="..." height="50px" width="50px">
+                            </a>
+                            <?php
+                        }
+                        ?>
+                        <h5 class="card-title text-center"><?=$row["ProductName"]?></h5>
+                        <h5 class="card-title text-center"><?=$row["Price"]?>€</h5>
+                    </div>
+                    <div class="top-right">
+                        <a onclick="addFavorite(<?=$row["ID"]?>)" id="<?="addHeart" . $row["ID"]?>" data-toggle="modal" data-target="#favoriteModal">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                            </svg>
+                        </a>
+                        <a onclick="deleteFavorite(<?=$row["ID"]?>)" id="<?="removeHeart" . $row["ID"]?>" style="display: none">
+                            <svg style="color: #ca1d1d" width="1.1rem" height="1.1rem" viewBox="0 0 16 16" class="bi bi-heart-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            <?php } ?>
         </div>
     </div>
-<?php
-}
-?>
 </div>
-</div>
-</div>
-</div>
+
 <!-- Modal -->
 <div class="modal fade" id="favoriteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -282,4 +276,5 @@ while($row = mysqli_fetch_assoc($result))
     }
 </script>
 </html>
+
 

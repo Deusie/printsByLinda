@@ -7,7 +7,7 @@ include 'configdb.php';
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorites</title>
-    <link rel="icon" href="Logos/PRINTS%20B%20Y%20LINDA.png">
+    <link rel="icon" href="Logos/LogosPrints.png">
     <link rel="stylesheet" href="Bootstrap%20pure/Style.css">
     <script src="Bootstrap%20pure/b1.js"></script>
     <script src="Bootstrap%20pure/b2.js"></script>
@@ -103,6 +103,7 @@ include 'configdb.php';
 </body>
 <script>
     Favorites = window.localStorage;
+    Cart = window.sessionStorage;
 
     $(document).ready(function(){
         runQuery();
@@ -133,6 +134,15 @@ include 'configdb.php';
         document.getElementById('addHeart' + favoriteId).style.display = "block";
         document.getElementById('removeHeart' + favoriteId).style.display = "none";
         runQuery();
+    }
+
+    function addCart(cartId) {
+        if (Cart.getItem(cartId) == null){
+            Cart.setItem(cartId, cartId);
+            console.log("added cart" + cartId)
+            document.getElementById('addCart' + cartId).style.display = "none";
+            document.getElementById('removeCart' + cartId).style.display = "inline";
+        }
     }
 </script>
 </html>

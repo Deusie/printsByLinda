@@ -1,13 +1,10 @@
 <?php
-include 'configdb.php';
+include 'configdbPDO.php';
 
 
-$sql = "SELECT * FROM product ORDER BY ".$_POST["column_name"]." ".$_POST["order"]."";
-$result = mysqli_query($con,$sql);
+$data = $conn->query("SELECT * FROM product ORDER BY ".$_POST["column_name"]." ".$_POST["order"]."")->fetchAll();
 
-while($row = mysqli_fetch_assoc($result))
-{
-    ?>
+foreach ($data as $row) {?>
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6 mb-5">
         <div class="card h-100">
             <?php

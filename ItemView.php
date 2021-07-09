@@ -7,7 +7,7 @@ include 'configdb.php';
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>Store</title>
-    <link rel="icon" href="Logos/PRINTS%20B%20Y%20LINDA.png">
+    <link rel="icon" href="Logos/LogosPrints.png">
     <link rel="stylesheet" href="Bootstrap pure/Style.css">
     <script src="Bootstrap pure/b1.js"></script>
     <script src="Bootstrap pure/b2.js"></script>
