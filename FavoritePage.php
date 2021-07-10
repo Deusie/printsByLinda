@@ -1,7 +1,3 @@
-<?php
-include 'configdb.php';
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -118,7 +114,7 @@ include 'configdb.php';
         ids = ids.substring(0, ids.length - 1);
 
         $.ajax({
-            url:"FavoriteSort.php",
+            url:"FavoriteDisplay.php",
             method:"POST",
             data:{itemID:ids},
             success:function(data)

@@ -1,5 +1,5 @@
 <?php
-include 'configdb.php';
+include 'configdbPDO.php';
 ?>
 
 <!DOCTYPE html>
@@ -85,18 +85,15 @@ include 'configdb.php';
 if (isset($_GET['product'])) {
 
 $id = $_GET['product'];
-$sqlSORT = "SELECT * FROM `product` WHERE ID = $id ";
-$resultSORT = mysqli_query($con, $sqlSORT);
-
+$data = $conn->query("SELECT * FROM `product` WHERE ID = $id ")->fetchAll();
 echo '<div class="container mt-5">';
 echo '<div class="row justify-content-center">';
 
-while ($row = mysqli_fetch_assoc($resultSORT)) {
+foreach ($data as $row) {
 $item = $row["Item"];
-$sqlSORT1 = "SELECT * FROM `itemtype` WHERE ID = '$item'";
-$resultSORT1 = mysqli_query($con, $sqlSORT1);
+$data2 = $conn->query("SELECT * FROM `itemtype` WHERE ID = '$item'")->fetchAll();
 
-while ($row2 = mysqli_fetch_assoc($resultSORT1)) {
+foreach ($data2 as $row2) {
     $materials = explode("/", $row2["Materials"]);
     $colors = explode(",", $row2["Colors"]);
     $sizes = explode(",", $row2["Sizes"]);
@@ -287,75 +284,6 @@ if ($row["Back_IMG"] != null){
                     echo '</div>';
                     echo '</div>';
                     }
-                    ?>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                         aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 style="color: #ee2761" class="modal-title" id="exampleModalLabel">Why can't i
-                                        order here</h5>
-                                </div>
-                                <div class="modal-body">
-                                    <p>All of our clothing is being printed and manufactured by our partner Teespring
-                                        and is currentley only available via our official listings on their site</p>
-                                    <p>We're hard at work to make sure that in the future you will be able to order all
-                                        our products directly from our site but for now be sure to shop your products
-                                        here and order them via Teespring</p>
-                                    <p>Learn more about <strong><span><a style="color: #ee2761"
-                                                                         href="#">Teespring</a></span></strong>.</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <a style="background-color: #ee2761; border: #6c0422" href="About us.php"
-                                       type="button" class="btn btn-primary">Learn more</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <?php
-                    //$sqlRelated = "SELECT * FROM `clothes`";
-                    //$resultRelated = mysqli_query($con, $sqlRelated);
-                    //
-                    //echo '<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">';
-                    //echo '<ol class="carousel-indicators">';
-                    //echo '<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>';
-                    //echo '<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>';
-                    //echo '<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>';
-                    //echo '</ol>';
-                    //echo '<div class="carousel-inner">';
-                    //
-                    //$counter = 0;
-                    //while ($row = mysqli_fetch_assoc($resultRelated)) {
-                    //    if ($counter == 0) {
-                    //        echo '<div class="carousel-item active">';
-                    //            echo '<div class="container mb-5">';
-                    //                echo '<div class="row">';
-                    //    }
-                    //                    echo '<div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-xs-6">';
-                    //                        echo '<div class="card h-100" style="background: #f5f5f5">';
-                    //                            echo '<a href="' . $row["Web_URL"] . '"><img src="../Images/Clothing/' . $row["Img_Path"] . '" class="card-img-top mt-5" alt="..."></a>';
-                    //                            echo '<div id="" class="card-body pt-2 p-0" style="background-color: #f5f5f5; color: #f5f5f5; transition: background-color 300ms;">';
-                    //                                echo '<h5 class="card-title text-center">SHOP NOW ON TEESPRING</h5>';
-                    //                            echo '</div>';
-                    //                            echo '<div class="card-body" style="background: white">';
-                    //                                echo '<p class="card-title text-center">' . $row["ItemName"] . '</p>';
-                    //                            echo '</div>';
-                    //                        echo '</div>';
-                    //                    echo '</div>';
-                    //                    $counter++;
-                    //    if ($counter == 4) {
-                    //                    echo '</div>';
-                    //                echo '</div>';
-                    //            echo '</div>';
-                    //        $counter = 0;
-                    //    }
-                    //}
-                    //
-                    //echo '</div>';
-                    //echo '</div>';
                     ?>
                     <!-- Modal -->
                     <div class="modal fade" id="favoriteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

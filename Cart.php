@@ -1,7 +1,3 @@
-<?php
-include 'configdb.php';
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -81,11 +77,11 @@ include 'configdb.php';
 </nav>
 
 
-<div id="dropCont" class="container mt-4 mb-5 mx-auto" >
+<div style="min-height: 700px" id="dropCont" class="container mt-4 mb-5 mx-auto" >
 
 </div>
 
-<footer class="container-fluid pt-3 pb-5 fixed-bottom" style="background-color: #535353;">
+<footer class="container-fluid pt-3 pb-5" style="background-color: #535353">
     <div class="container">
         <div class="row">
             <div class="col">
@@ -115,7 +111,7 @@ include 'configdb.php';
         ids = ids.substring(0, ids.length - 1);
 
         $.ajax({
-            url:"CartSort.php",
+            url:"CartDisplay.php",
             method:"POST",
             data:{itemID:ids},
             success:function(data)

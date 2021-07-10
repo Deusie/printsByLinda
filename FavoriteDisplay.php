@@ -1,12 +1,9 @@
 <?php
-include 'configdb.php';
+include 'configdbPDO.php';
 if ($_POST["itemID"] != null) {
-    $sqlSort = "SELECT * FROM product WHERE ID IN (" . $_POST["itemID"] . ")";
+    $data = $conn->query("SELECT * FROM product WHERE ID IN (" . $_POST["itemID"] . ") ORDER BY ID ASC")->fetchAll();
 
-    $resultSort = mysqli_query($con,$sqlSort);
-
-    while($row = mysqli_fetch_assoc($resultSort))
-    {
+    foreach ($data as $row){
         ?>
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 mb-5">
             <div class="card mb-3" style="max-width: 540px;">

@@ -14,7 +14,9 @@ $huisNummer = '119';
 $Plaats = 'Sint- pancras';
 $Postcode = '1834 EC';
 $Instructies = 'Graag naast de witte plantenbak zetten';
-
+$Aantal = 3;
+$totalPrice = 0;
+$verzendKosten = '2.50';
 
 
 
@@ -71,7 +73,7 @@ $pdf->setCellPaddings(2, 1, 2, 1);
 $pdf->setCellMargins(1, 2, 1, 1);
 
 // set color for background
-$pdf->SetFillColor(120, 172, 255);
+$pdf->SetFillColor(122, 193, 253);
 
 // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
 
@@ -109,45 +111,56 @@ tr {
 }
 
 th {
-    background-color: #CCCCCC;
-    border: 1px solid #DDDDDD;
+    background-color: #7ac1fd;
     color: #333333;
     font-family: trebuchet MS;
-    font-size: 30px;
+    font-size: 10px;
     padding-bottom: 4px;
     padding-left: 6px;
     padding-top: 5px;
     text-align: left;
 }
 td {
-    border: 1px solid #CCCCCC;
-    font-size: 25px;
+    border-bottom: 1px solid #CCCCCC;
+    font-size: 10px;
     padding: 3px 7px 2px;
 }
 </style>
-<table id="gallerytab" width="600" cellspacing="2" cellpadding="1" border="0">
+<table id="gallerytab" width="600" cellspacing="0" cellpadding="4" border="0">
 <tr>
-        <th><font face="Arial, Helvetica, sans-serif">Products Title</font></th>
-        <th><font face="Arial, Helvetica, sans-serif">Product Specs</font></th>
-        <th><font face="Arial, Helvetica, sans-serif">Product Price</font></th>
-        <th><font face="Arial, Helvetica, sans-serif">Products Image</font></th>
+        <th><font face="Arial, Helvetica, sans-serif">Aantal</font></th>
+        <th><font face="Arial, Helvetica, sans-serif">product</font></th>
+        <th><font face="Arial, Helvetica, sans-serif">prijs per eenheid</font></th>
+        <th><font face="Arial, Helvetica, sans-serif">Totaal</font></th>
       </tr>';
 $tbl_footer = '</table>';
 $tbl = '';
 
-$data = $conn->query("SELECT * FROM product")->fetchAll();
+$data = $conn->query("SELECT * FROM product WHERE ID IN (1, 2)")->fetchAll();
 foreach ($data as $row) {
+    $totalPrice += $row['Price'];
     $tbl .= '
     <tr>
-        <td>'.$row['ID'].'</td>
+        <td>'.$Aantal.'</td>
         <td>'.$row['ProductName'].'</td>
-        <td>'.$row['Categorie'].'</td>
+        <td>'.$row['Price'].'</td>
+        <td>'.$Aantal * $row['Price'].'</td>
     </tr>
 ';
 }
 // output the HTML content
 $pdf->writeHTML($tbl_header . $tbl . $tbl_footer, true, false, false, false, '');
 
+$pdf->setCellMargins(75, 1, 1, 1);
+$BTW = round((21 / 100) * $totalPrice, 2);
+$subTotal = $totalPrice - $BTW;
+
+$pdf->MultiCell(100, 10, "SUBTOTAAL: ".$subTotal, 'B', 'J', 0, 1, '', '', true, 0, false, true, 10, 'M');
+$pdf->MultiCell(100, 10, "BTW: ".$BTW, 'B', 'J', 0, 1, '', '', true, 0, false, true, 10, 'M');
+$pdf->MultiCell(100, 10, "Verzendkosten: ".$verzendKosten, 'B', 'J', 0, 1, '', '', true, 0, false, true, 10, 'M');
+$floatVerzendkosten = (float)$verzendKosten;
+$totalPrice2 = $totalPrice + $floatVerzendkosten;
+$pdf->MultiCell(100, 10, "TOTAAL: ".$totalPrice2, 0, 'J', 1, 1, '', '', true, 0, false, true, 10, 'M');
 
 
 // move pointer to last page
