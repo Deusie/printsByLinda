@@ -7,7 +7,7 @@ include 'configdb.php';
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>Official Ved webstore</title>
-    <link rel="icon" href="Logos/VEDfavicon.png">
+    <link rel="icon" href="assets/Logos/VEDfavicon.png">
     <link rel="stylesheet" href="Bootstrap%20pure/Style.css">
     <script src="Bootstrap%20pure/b1.js"></script>
     <script src="Bootstrap%20pure/b2.js"></script>
@@ -29,7 +29,7 @@ include 'configdb.php';
 
 <nav class="navbar navbar-expand-md navbar-dark" style="background-color: black">
     <a class="navbar-brand" href="index.php">
-        <img src="Logos/VedderNavLogo.svg" width="75em" height="75em"  alt="">
+        <img src="assets/Logos/VedderNavLogo.svg" width="75em" height="75em" alt="">
     </a>
     <a id="heartIcon" class="d-md-none ml-auto" href="FavoritePage.php">
         <svg style="color: white" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

@@ -11,7 +11,7 @@ foreach ($data as $row) {?>
             if (empty($row["Back_IMG"])) {
                 ?>
                 <a target="_blank" class="mb-4"href="ItemView.php?product= <?=$row["ID"]?>">
-                    <img src="Images/Clothing/<?=$row["Front_IMG"]?>" class="card-img-top mt-4" alt="...">
+                    <img src="assets/product-images/<?=$row["Front_IMG"]?>" class="card-img-top mt-4" alt="...">
                 </a>
                 <div class="card-body" style="background: white">
                     <p class="card-title text-center"><?= $row["ProductName"]?></p>
@@ -34,12 +34,12 @@ foreach ($data as $row) {?>
                     <div class="cardFlip" id="<?="flip" . $row["ID"]?>" onclick="flip()">
                         <div class="front">
                             <a class="mb-4" href="ItemView.php?product= <?=$row["ID"]?>">
-                                <img src="Images/Clothing/<?=$row["Front_IMG"]?>" class="card-img-top mt-4" alt="...">
+                                <img src="assets/product-images/<?=$row["Front_IMG"]?>" class="card-img-top mt-4" alt="...">
                             </a>
                         </div>
                         <div class="back">
                             <a class="mb-4" href="ItemView.php?product= <?=$row["ID"]?>">
-                                <img src="Images/Clothing/<?=$row["Back_IMG"]?>" class="card-img-top mt-4" alt="...">
+                                <img src="assets/product-images/<?=$row["Back_IMG"]?>" class="card-img-top mt-4" alt="...">
                             </a>
                         </div>
                     </div>
