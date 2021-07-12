@@ -1,3 +1,6 @@
+<?php
+include 'configdbPDO.php';
+?>
 <!DOCTYPE html>
 <html>
 <head>

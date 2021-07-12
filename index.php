@@ -102,7 +102,7 @@ echo '<div class="container mb-5 mt-5">';
                     </a>
                     <div class="card-body">
                         <?php
-                        if ($row["Back_IMG"] != "Template-back.png"){
+                        if (!empty($row["Back_IMG"])){
                             ?>
                             <a onclick="changeToBack(<?=$row["ID"]?>)">
                                 <img src="assets/product-images/<?=$row["Front_IMG"]?>" alt="..." height="50px" width="50px">

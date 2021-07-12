@@ -42,33 +42,35 @@ foreach ($data2 as $row2) {
     $sleeves = explode("x", $row2["Sleeve"]);
 }
 
-if ($row["Back_IMG"] != null){
 ?>
+<!--voor en achterfotos desktop-->
 <div class="col-xl-1 col-lg-2 col-md-12 col-sm-12 col-1 p-0 pr-1 d-none d-lg-block">
     <a onclick="changeToBack()" style="cursor: pointer">
         <img src="assets/product-images/<?= $row["Front_IMG"] ?>" class="card-img-top" alt="...">
     </a>
     <a onclick="changeToFront()" style="cursor: pointer">
-        <img src="assets/product-images/<?= $row["Back_IMG"] ?>" class="card-img-top mt-3" alt="...">
+        <?php
+        if (empty($row["Back_IMG"])){echo '<img src="assets/product-images/Template-back.png" class="card-img-top mt-3" alt="...">'; }else{ ?>
+        <img src="assets/product-images/<?= $row["Back_IMG"] ?>" class="card-img-top mt-3" alt="..."><?php } ?>
     </a>
 </div>
-    <?php
-}
-?>
+
+<!--main IMG-->
 <div class="col-xl-5 col-lg-5 col-md-11 col-sm-11 col-11 pt-5 pb-4">
     <div class="card h-100">
         <a id="imageContainerFront" href="<?= $row["Web_URL"] ?>">
             <img src="assets/product-images/<?= $row["Front_IMG"] ?>" class="card-img-top mt-5" alt="...">
         </a>
         <a id="imageContainerBack" style="display: none;" href="<?= $row["Web_URL"] ?>">
-            <img src="assets/product-images/<?= $row["Back_IMG"] ?>" class="card-img-top mt-5" alt="...">
+            <?php
+            if (empty($row["Back_IMG"])){echo '<img src="assets/product-images/Template-back.png" class="card-img-top mt-5" alt="...">'; }else{ ?>
+                <img src="assets/product-images/<?= $row["Back_IMG"] ?>" class="card-img-top mt-5" alt="..."><?php } ?>
         </a>
     </div>
 </div>
-<?php
-if ($row["Back_IMG"] != null){
 
-?>
+<!--voor en achterfotos mobile-->
+
 <div class="col-md-12 col-sm-12 col-12 p-0 pr-1 d-lg-none mt-3 mb-3">
     <ul class="list-group list-group-horizontal pr-3 pl-3">
         <li class="list-group-item border-0 p-0" style="width: 75rem"></li>
@@ -79,15 +81,14 @@ if ($row["Back_IMG"] != null){
         </li>
         <li class="list-group-item border-0 p-0 ml-2">
             <a onclick="changeToFront()" style="cursor: pointer">
-                <img src="assets/product-images/<?= $row["Back_IMG"] ?>" class="card-img-top" alt="...">
+                <?php
+                if (empty($row["Back_IMG"])){echo '<img src="assets/product-images/Template-back.png" class="card-img-top" alt="...">'; }else{ ?>
+                    <img src="assets/product-images/<?= $row["Back_IMG"] ?>" class="card-img-top" alt="..."><?php } ?>
             </a>
         </li>
         <li class="list-group-item border-0 p-0 ml-2" style="width: 75rem"></li>
     </ul>
 </div>
-    <?php
-}
-?>
 
 <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 text-center">
     <h3><?= $row["ProductName"] ?></h3>

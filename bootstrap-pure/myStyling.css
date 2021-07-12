@@ -1,9 +1,19 @@
+@media (min-width: 0px) and (max-width: 576px)
+{
+    .card-columns {
+        -webkit-column-count: 1;
+        -moz-column-count: 1;
+        column-count: 1;
+        padding: 1.5rem;
+    }
+}
 @media (min-width: 576px) and (max-width: 768px)
 {
     .card-columns {
         -webkit-column-count: 2;
         -moz-column-count: 2;
         column-count: 2;
+        background-color: red;
     }
 }
 

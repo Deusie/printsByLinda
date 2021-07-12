@@ -3,14 +3,12 @@ include 'configdbPDO.php';
 
 if ($_POST["itemID"] != null) {
 
-    $totalPrice = 0;
     $num = 0;
    $data = $conn->query("SELECT * FROM product WHERE ID IN (" . $_POST["itemID"] . ") ORDER BY ID ASC")->fetchAll();
 
    echo'<div id="cartContainer" class="row" >';
    echo'<h2 class="mb-5 ml-1">Winkelwagen</h2>';
     foreach ($data as $row){
-        $totalPrice += $row["Price"];
         ?>
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-5">
             <div class="card mb-3">
@@ -53,7 +51,7 @@ if ($_POST["itemID"] != null) {
                                     </div>
                                 </div>
                                 <div class="col-xl-2 col-lg-2 col-md-2 col-7">
-                                    <p><?=$row["Price"]?> €</p>
+                                    <p id="<?="priceText" . $num?>"><?=$row["Price"]?> €</p>
                                 </div>
                                 <div class="col-xl-1 col-lg-1 col-md-1 col-2 d-none d-md-block">
                                     <a onclick="addCart(<?=$row["ID"]?>)" id="<?="addCart" . $row["ID"]?>">
@@ -78,7 +76,7 @@ if ($_POST["itemID"] != null) {
 
     <div id="bestellenContainer" class="row" style="background-color: #b8b8b8">
         <div class="col-md-12 p-3" >
-            <p class="text-right">totaal artikelen <?=$totalPrice?></p>
+            <p id="totalPriceText" class="text-right">totaal artikelen </p>
             <button onclick="showForm()" type="button" class="float-right btn btn-outline-primary">Verder naar bestellen</button>
         </div>
     </div>
@@ -140,7 +138,7 @@ if ($_POST["itemID"] != null) {
         <div class="form-row">
             <div class="form-group col-lg-11 col-lg-11 col-md-11 col-12">
                 <label for="inputInstructies">Instructies</label>
-                <textarea class="form-control" id="inputInstructies" name="inputInstructies"rows="3"></textarea>
+                <textarea class="form-control" id="inputInstructies" name="inputInstructies" rows="3"></textarea>
             </div>
         </div>
 
@@ -151,12 +149,17 @@ if ($_POST["itemID"] != null) {
 
 <script>
     Cart = window.sessionStorage;
+    let totalPrice = 0;
+    let pricePerCartId = 0;
     const cartAantal = [];
+    const prices = [];
     $(document).on('click', '.sortOption', function(){
-        var order = $(this).data("order");
+        var cartID = $(this).data("order");
 
-        $( "#dropdownMenuButton" + order ).text($(this).html());
-        cartAantal[order]= $(this).html();
+        $( "#dropdownMenuButton" + cartID ).text($(this).html());
+        cartAantal[cartID]= $(this).html();
+        totalPrice = 0;
+        prices.forEach(calcTotalPrice);
     });
 
     $(document).ready(function(){
@@ -164,7 +167,9 @@ if ($_POST["itemID"] != null) {
             document.getElementById('addCart' + Cart.getItem(sessionStorage.key(i))).style.display = "none";
             document.getElementById('removeCart' + Cart.getItem(sessionStorage.key(i))).style.display = "block";
             cartAantal[i] = 1;
+            prices[i] = document.getElementById('priceText'+i).innerText;
         }
+        prices.forEach(calcTotalPrice);
 
         $("form").on("submit", function(event){
             event.preventDefault();
@@ -199,6 +204,15 @@ if ($_POST["itemID"] != null) {
             })
         });
     });
+
+    function calcTotalPrice(value, index) {
+        pricePerCartId = parseFloat(value) * cartAantal[index];
+        totalPrice += pricePerCartId;
+
+        document.getElementById('totalPriceText').innerHTML = totalPrice;
+    }
+
+
 
     function showForm() {
         document.getElementById('cartContainer').style.display = "none";

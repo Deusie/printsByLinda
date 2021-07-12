@@ -191,7 +191,7 @@ td {
 
     try {
         //Server settings
-        $mail->SMTPDebug = 4;                      //Enable verbose debug output
+        //$mail->SMTPDebug = 4;                      //Enable verbose debug output
         $mail->isSMTP();                                            //Send using SMTP
         $mail->Host       = 'mail.printsbylinda.com';                     //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
