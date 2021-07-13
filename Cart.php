@@ -34,7 +34,11 @@ include("Footer.php");
 </body>
 <script>
     Cart = window.sessionStorage;
-
+    let totalPrice = 0;
+    let pricePerCartId = 0;
+    const cartAantal = [];
+    const prices = [];
+    let formValues;
     $(document).ready(function(){
         runQuery();
     });
@@ -57,13 +61,6 @@ include("Footer.php");
             }
         })
     }
-
-    function deleteCart(cartId) {
-        Cart.removeItem(cartId);
-        console.log("removed Cart");
-        runQuery();
-    }
-
 </script>
 </html>
 

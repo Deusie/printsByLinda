@@ -4,10 +4,10 @@
 //$password = "MT0JOextj";
 //$database = "jessegc469_Prints";
 
-//$servername = "localhost";
-//$username = "root";
-//$password = "";
-//$database = "printsbylinda";
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "printsbylinda";
 
 try {
     $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);

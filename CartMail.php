@@ -151,7 +151,7 @@ td {
     $i = 0;
     $totalPrice = 0;
     foreach ($data as $row) {
-        $totalPrice += $row['Price'];
+        $totalPrice += $aantalArr[$i] * $row['Price'];
         $tbl .= '
     <tr>
         <td>'.$aantalArr[$i].'</td>
@@ -214,7 +214,20 @@ td {
         $mail->AltBody = 'alt body';
 
         $mail->send();
-        echo '<h1>E-mail is verzonden</h1>';
+        echo'
+        <div class="row text-center mt-5">
+            <div class="col">
+                <h1>BEDANKT VOOR U BESTELLING!!</h1>
+            </div>
+        </div>
+        <div class="row mt-5 mb-5 text-center">
+            <div class="col">
+                <h3>Op dit moment is het alleen maar mogelijk om met een factuur te betalen</h3>
+                <h4 class="mt-4 mb-5">Gelieve de stappen in uw mail te volgen</h4>
+                <h6 class="mb-5">Dan gaan wij alvast met u bestelling aan de slag :)</h6>
+            </div>
+        </div>';
+
     } catch (Exception $e) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }

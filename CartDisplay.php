@@ -4,10 +4,17 @@ include 'configdbPDO.php';
 if ($_POST["itemID"] != null) {
 
     $num = 0;
+    $num2 = 0;
    $data = $conn->query("SELECT * FROM product WHERE ID IN (" . $_POST["itemID"] . ") ORDER BY ID ASC")->fetchAll();
 
-   echo'<div id="cartContainer" class="row" >';
-   echo'<h2 class="mb-5 ml-1">Winkelwagen</h2>';
+   ?>
+    <div id="cartContainer" class="row" style="display: block">
+        <nav class="mb-5" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">Winkelwagen</a></li>
+            </ol>
+        </nav>
+    <?php
     foreach ($data as $row){
         ?>
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-5">
@@ -25,10 +32,10 @@ if ($_POST["itemID"] != null) {
                                     <p class="card-title text-center"><?= $row["ProductName"]?></p>
                                 </div>
                                 <div class="col-xl-1 col-lg-1 col-md-1 col-2">
-                                    <a onclick="addCart(<?=$row["ID"]?>)" id="<?="addCart" . $row["ID"]?>">
+                                    <a onclick="deleteCart(<?=$row["ID"]?>)" id="<?="removeCart" . $row["ID"]?>">
                                         <i class="bi bi-x"></i>
                                     </a>
-                                    <a onclick="deleteCart(<?=$row["ID"]?>)" id="<?="removeCart" . $row["ID"]?>" style="display: none">
+                                    <a onclick="addCart(<?=$row["ID"]?>)" id="<?="addCart" . $row["ID"]?>" style="display: none">
                                         <i class="bi bi-x"></i>
                                     </a>
                                 </div>
@@ -43,10 +50,10 @@ if ($_POST["itemID"] != null) {
                                             1
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item sortOption" data-order="<?=$num?>" href="#">1</a>
-                                            <a class="dropdown-item sortOption" data-order="<?=$num?>" href="#">2</a>
-                                            <a class="dropdown-item sortOption" data-order="<?=$num?>" href="#">3</a>
-                                            <a class="dropdown-item sortOption" data-order="<?=$num?>" href="#">4</a>
+                                            <a class="dropdown-item aantal" data-order="<?=$num?>" href="#">1</a>
+                                            <a class="dropdown-item aantal" data-order="<?=$num?>" href="#">2</a>
+                                            <a class="dropdown-item aantal" data-order="<?=$num?>" href="#">3</a>
+                                            <a class="dropdown-item aantal" data-order="<?=$num?>" href="#">4</a>
                                         </div>
                                     </div>
                                 </div>
@@ -54,10 +61,10 @@ if ($_POST["itemID"] != null) {
                                     <p id="<?="priceText" . $num?>"><?=$row["Price"]?> €</p>
                                 </div>
                                 <div class="col-xl-1 col-lg-1 col-md-1 col-2 d-none d-md-block">
-                                    <a onclick="addCart(<?=$row["ID"]?>)" id="<?="addCart" . $row["ID"]?>">
+                                    <a onclick="deleteCart(<?=$row["ID"]?>)" id="<?="removeCart" . $row["ID"]?>">
                                         <i class="bi bi-x"></i>
                                     </a>
-                                    <a onclick="deleteCart(<?=$row["ID"]?>)" id="<?="removeCart" . $row["ID"]?>" style="display: none">
+                                    <a onclick="addCart(<?=$row["ID"]?>)" id="<?="addCart" . $row["ID"]?>" style="display: none">
                                         <i class="bi bi-x"></i>
                                     </a>
                                 </div>
@@ -74,8 +81,8 @@ if ($_POST["itemID"] != null) {
     echo '</div>';
     ?>
 
-    <div id="bestellenContainer" class="row" style="background-color: #b8b8b8">
-        <div class="col-md-12 p-3" >
+    <div id="bestellenContainer" class="row p-3" style="background-color: #b8b8b8; min-height: 110px">
+        <div class="col-md-12" >
             <p id="totalPriceText" class="text-right">totaal artikelen </p>
             <button onclick="showForm()" type="button" class="float-right btn btn-outline-primary">Verder naar bestellen</button>
         </div>
@@ -92,8 +99,13 @@ if ($_POST["itemID"] != null) {
 }
 ?>
 
-<div id="formContainer" style="display: none">
-    <h2 class="mb-5">Bezorgadres</h2>
+<div id="formContainer" class="row" style="display: none">
+    <nav class="mb-5" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li onclick="showCart()" class="breadcrumb-item"><a href="#">Winkelwagen</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Bezorgadres</li>
+        </ol>
+    </nav>
     <form method="post">
         <div class="form-row">
             <div class="form-group col-lg-4 col-lg-4 col-md-4 col-12">
@@ -142,41 +154,118 @@ if ($_POST["itemID"] != null) {
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Bestellen</button>
+        <button type="submit" onclick="showInfoCheck()" class="btn btn-primary">Volgende</button>
     </form>
 </div>
 
+<div id="infoCheckContainer" class="row" style="display: none">
+    <nav class="mb-5" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li onclick="showCart()" class="breadcrumb-item"><a href="#">Winkelwagen</a></li>
+            <li onclick="showForm()" class="breadcrumb-item"><a href="#">Bezorgadres</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Gegevens controleren</li>
+        </ol>
+    </nav>
+    <div class="jumbotron text-center">
+        <h2 class="display-4 mb-5">Uw gegevens</h2>
+        <p class="lead" id="nameDisplay">hier komt de info die je kunt checken</p>
+        <p class="lead" id="mailDisplay">hier komt de info die je kunt checken</p>
+        <p class="lead" id="straatNrDisplay">hier komt de info die je kunt checken</p>
+        <p class="lead mb-5" id="plaatsCodeDisplay">hier komt de info die je kunt checken</p>
+        <?php
+        foreach ($data as $row){
+        ?>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-0 p-0">
+            <div class="card mb-0 border-bottom">
+                <div class="row">
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-5 p-0">
+                        <div class="mb-4">
+                            <img width="100px" height="100px" src="assets/product-images/<?=$row["Front_IMG"]?>" class="mt-4 mb-4" alt="...">
+                        </div>
+                    </div>
+                    <div class="col-xl-10 col-lg-10 col-md-10 col-7">
+                        <div class="card-body">
+                            <div class="row d-md-none">
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-9">
+                                    <p class="card-title text-center"><?= $row["ProductName"]?></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col d-none d-md-block">
+                                    <p class="card-title text-center"><?= $row["ProductName"]?></p>
+                                </div>
+                                <div class="col-xl-1 col-lg-1 col-md-2 col-5">
+                                    <div class="dropdown shadow-none">
+                                        <p id="<?="dropdownMenuButtonCheck" . $num2?>">1</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-7">
+                                    <p id="<?="priceText2" . $num2?>"><?=$row["Price"]?> €</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php
+        $num2++;
+    }
+    ?>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-5 bg-white p-3">
+            <p class="text-center float-left">Totaal: </p>
+            <p id="totalPriceText2" class="text-right">0.00€</p>
+        </div>
+        <button class="btn btn-primary btn-lg bestellen">Door naar betalen</button>
+    </div>
+</div>
+
+<!--<div id="paymentContainer" class="row" style="display: none">-->
+<!--    <nav class="mb-5" aria-label="breadcrumb">-->
+<!--        <ol class="breadcrumb">-->
+<!--            <li onclick="showCart()" class="breadcrumb-item"><a href="#">Winkelwagen</a></li>-->
+<!--            <li onclick="showForm()" class="breadcrumb-item"><a href="#">Bezorgadres</a></li>-->
+<!--            <li onclick="showInfoCheck()" class="breadcrumb-item"><a href="#">Gegevens controleren</a></li>-->
+<!--            <li class="breadcrumb-item active" aria-current="page">Betaalopties</li>-->
+<!--        </ol>-->
+<!--    </nav>-->
+<!--    <div class="col">-->
+<!--        <P>Op dit moment is het alleen mogelijk om via factuur te betalen</P>-->
+<!--        <P></P>-->
+<!--    </div>-->
+<!--    <button class="btn btn-primary bestellen">Bestellen</button>-->
+<!--</div>-->
 
 <script>
     Cart = window.sessionStorage;
-    let totalPrice = 0;
-    let pricePerCartId = 0;
-    const cartAantal = [];
-    const prices = [];
-    $(document).on('click', '.sortOption', function(){
+
+
+    $(document).on('click', '.aantal', function(){
         var cartID = $(this).data("order");
 
         $( "#dropdownMenuButton" + cartID ).text($(this).html());
+        $( "#dropdownMenuButtonCheck" + cartID ).text("x" + $(this).html());
+        console.log("set button to: " + $(this).html() );
         cartAantal[cartID]= $(this).html();
         totalPrice = 0;
         prices.forEach(calcTotalPrice);
     });
 
     $(document).ready(function(){
-        for (var i = 0; i < Cart.length; i++){
-            document.getElementById('addCart' + Cart.getItem(sessionStorage.key(i))).style.display = "none";
-            document.getElementById('removeCart' + Cart.getItem(sessionStorage.key(i))).style.display = "block";
-            cartAantal[i] = 1;
-            prices[i] = document.getElementById('priceText'+i).innerText;
-        }
+        fillArrays();
         prices.forEach(calcTotalPrice);
-
         $("form").on("submit", function(event){
             event.preventDefault();
 
-            var formValues= $(this).serializeArray();
+            formValues = $(this).serializeArray();
+            document.getElementById('nameDisplay').innerText = formValues[0].value+" "+formValues[1].value+" "+formValues[2].value;
+            document.getElementById('mailDisplay').innerText = formValues[3].value;
+            document.getElementById('straatNrDisplay').innerText = formValues[4].value+" "+formValues[5].value;
+            document.getElementById('plaatsCodeDisplay').innerText = formValues[6].value+" "+formValues[7].value;
+        });
 
-
+        $(document).on('click', '.bestellen', function(){
             var ids = "";
             for (var i = 0; i < Cart.length; i++){
                 ids += Cart.getItem(Cart.key(i)) + ",";
@@ -205,11 +294,35 @@ if ($_POST["itemID"] != null) {
         });
     });
 
+    function fillArrays(){
+        for (var i = 0; i < Cart.length; i++){
+            document.getElementById('addCart' + Cart.getItem(sessionStorage.key(i))).style.display = "none";
+            document.getElementById('removeCart' + Cart.getItem(sessionStorage.key(i))).style.display = "block";
+            cartAantal[i] = 1;
+            prices[i] = document.getElementById('priceText'+i).innerText;
+        }
+    }
+
+    function deleteCart(cartId) {
+        Cart.removeItem(cartId);
+        console.log("removed Cart");
+        cartAantal.length = 0;
+        prices.length = 0;
+        totalPrice = 0;
+        pricePerCartId = 0
+        fillArrays();
+        runQuery();
+
+    }
+
     function calcTotalPrice(value, index) {
         pricePerCartId = parseFloat(value) * cartAantal[index];
         totalPrice += pricePerCartId;
-
-        document.getElementById('totalPriceText').innerHTML = totalPrice;
+        console.log(index);
+        document.getElementById('priceText'+index).innerText = (Math.round((pricePerCartId + Number.EPSILON) * 100) / 100).toString();
+        document.getElementById('priceText2'+index).innerText = (Math.round((pricePerCartId + Number.EPSILON) * 100) / 100).toString();
+        document.getElementById('totalPriceText').innerHTML = (Math.round((totalPrice + Number.EPSILON) * 100) / 100).toString();
+        document.getElementById('totalPriceText2').innerHTML = (Math.round((totalPrice + Number.EPSILON) * 100) / 100).toString() + "€";
     }
 
 
@@ -218,6 +331,35 @@ if ($_POST["itemID"] != null) {
         document.getElementById('cartContainer').style.display = "none";
         document.getElementById('bestellenContainer').style.display = "none";
         document.getElementById('formContainer').style.display = "block";
+        document.getElementById('infoCheckContainer').style.display = "none";
+        // document.getElementById('paymentContainer').style.display = "none";
+
     }
+
+    function showCart(){
+        document.getElementById('cartContainer').style.display = "block";
+        document.getElementById('bestellenContainer').style.display = "block";
+        document.getElementById('formContainer').style.display = "none";
+        document.getElementById('infoCheckContainer').style.display = "none";
+        // document.getElementById('paymentContainer').style.display = "none";
+
+    }
+
+    function showInfoCheck(){
+        document.getElementById('cartContainer').style.display = "none";
+        document.getElementById('bestellenContainer').style.display = "none";
+        document.getElementById('formContainer').style.display = "none";
+        document.getElementById('infoCheckContainer').style.display = "block";
+        // document.getElementById('paymentContainer').style.display = "none";
+
+    }
+
+    // function showPayment(){
+    //     document.getElementById('cartContainer').style.display = "none";
+    //     document.getElementById('bestellenContainer').style.display = "none";
+    //     document.getElementById('formContainer').style.display = "none";
+    //     document.getElementById('infoCheckContainer').style.display = "none";
+    //     document.getElementById('paymentContainer').style.display = "block";
+    // }
 </script>
 

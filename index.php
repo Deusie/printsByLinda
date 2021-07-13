@@ -137,7 +137,7 @@ echo '<div class="container mb-5 mt-5">';
 <!-- Modal -->
 <!-- Footer -->
 <?php
-include("Favorite-Modal.php");
+include("Modals.php");
 include("Footer.php");
 ?>
 </body>
@@ -157,9 +157,6 @@ include("Footer.php");
         console.log("added favorite" + favoriteId)
         document.getElementById('addHeart' + favoriteId).style.display = "none";
         document.getElementById('removeHeart' + favoriteId).style.display = "block";
-        document.getElementById('favoriteModalText').textContent = "Artikel is toegevoegd aan je verlanglijstje";
-        // var modalBody = document.getElementById('modalBody')
-        favoriteModalOpen();
     }
 
     function deleteFavorite(favoriteId) {

@@ -68,7 +68,7 @@ theme_header('store');
 <!-- Modal -->
 <!-- Footer -->
 <?php
-include("Favorite-Modal.php");
+include("Modals.php");
 include("Footer.php");
 ?>
 </body>
@@ -94,7 +94,6 @@ include("Footer.php");
         console.log("added favorite" + favoriteId)
         document.getElementById('addHeart' + favoriteId).style.display = "none";
         document.getElementById('removeHeart' + favoriteId).style.display = "block";
-        document.getElementById('favoriteModalText').textContent = "Item added to your favorites";
     }
 
     function deleteFavorite(favoriteId) {
