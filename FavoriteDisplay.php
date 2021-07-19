@@ -47,7 +47,7 @@ if ($_POST["itemID"] != null) {
 }else{
     ?>
     <div class="col mt-5 text-center">
-        <h4>You don't have any favorites yet</h4>
+        <h4>Je hebt nog geen favorieten</h4>
     </div>
 <?php
 }

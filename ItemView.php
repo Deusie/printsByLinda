@@ -30,17 +30,17 @@ echo '<div class="container mt-5">';
 echo '<div class="row justify-content-center">';
 
 foreach ($data as $row) {
-$item = $row["Item"];
-$data2 = $conn->query("SELECT * FROM `itemtype` WHERE ID = '$item'")->fetchAll();
+    $item = $row["Item"];
+    $data2 = $conn->query("SELECT * FROM `itemtype` WHERE ID = '$item'")->fetchAll();
 
-foreach ($data2 as $row2) {
-    $materials = explode("/", $row2["Materials"]);
-    $colors = explode(",", $row2["Colors"]);
-    $sizes = explode(",", $row2["Sizes"]);
-    $widths = explode("x", $row2["Width"]);
-    $lengths = explode("x", $row2["Length"]);
-    $sleeves = explode("x", $row2["Sleeve"]);
-}
+    foreach ($data2 as $row2) {
+        $materials = explode("/", $row2["Materials"]);
+        $colors = explode(",", $row2["Colors"]);
+        $sizes = explode(",", $row2["Sizes"]);
+        $widths = explode("x", $row2["Width"]);
+        $lengths = explode("x", $row2["Length"]);
+        $sleeves = explode("x", $row2["Sleeve"]);
+    }
 
 ?>
 <!--voor en achterfotos desktop-->
@@ -101,8 +101,9 @@ foreach ($data2 as $row2) {
         $limitedArray = array_slice($colors, 0, 8, true);
         foreach ($limitedArray as $color) {
             $color = "#" . $color;
-            echo '<a class="p-1"><li class="list-group-item open" style="cursor: pointer; background-color:' . $color . '; border-radius: 1px;  padding: 10px;"></li></a>';
-
+            ?>
+            <a class="p-1" onclick="addCart(<?=$row["ID"]?>, false)"><li class="list-group-item open" style="cursor: pointer; background-color:<?=$color?>; border-radius: 1px;  padding: 10px;"></li></a>
+        <?php
         }
         ?>
     </ul>
@@ -111,13 +112,15 @@ foreach ($data2 as $row2) {
         <p>Sizes:</p>
         <?php
         foreach ($sizes as $size) {
-            echo '<a class="p-1"><li class="list-group-item open" style="cursor:pointer; border-radius: 1px;  padding: 0 7px 0 7px">' . $size . '</li></a>';
+            ?>
+            <a class="p-1" onclick="addCart(<?=$row["ID"]?>, false)"><li class="list-group-item open" style="cursor:pointer; border-radius: 1px;  padding: 0 7px 0 7px"><?=$size?></li></a>
+            <?php
         }
         ?>
     </ul>
 
     <hr class="mb-3" style="border: 2px dashed #e0e0e0;">
-    <button onclick="addCart(<?=$row["ID"]?>)"  type="button" class="btn btn-primary btn-lg mr-2 mt-1">
+    <button onclick="addCart(<?=$row["ID"]?>, true)"  type="button" class="btn btn-primary btn-lg mr-2 mt-1">
         <i id="<?="addCart" . $row["ID"]?>" class="bi bi-bag-plus"></i>
         <i style="display: none" id="<?="removeCart" . $row["ID"]?>" class="bi bi-bag-check-fill"></i>
         In winkelwagen
@@ -266,13 +269,27 @@ foreach ($data2 as $row2) {
         document.getElementById('removeHeart' + favoriteId).style.display = "inline";
     }
 
-    function addCart(cartId) {
+    function addCart(cartId, cartModal) {
         if (Cart.getItem(cartId) == null){
             Cart.setItem(cartId, cartId);
-            console.log("added cart" + cartId)
+            console.log("added cart " + cartId)
             document.getElementById('addCart' + cartId).style.display = "none";
             document.getElementById('removeCart' + cartId).style.display = "inline";
-            $('#cartModal').modal();
+            if (cartModal){
+                $('#cartModal').modal();
+            }else{
+                document.getElementById('toegevoegdText').style.display = "block";
+                $('#infoModal').modal();
+            }
+        }
+        else if (cartModal){
+            Cart.removeItem(cartId);
+            console.log("removed cart " + cartId)
+            document.getElementById('addCart' + cartId).style.display = "inline";
+            document.getElementById('removeCart' + cartId).style.display = "none";
+        }else{
+            document.getElementById('toegevoegdText').style.display = "none";
+            $('#infoModal').modal();
         }
     }
 

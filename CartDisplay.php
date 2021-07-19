@@ -16,6 +16,13 @@ if ($_POST["itemID"] != null) {
         </nav>
     <?php
     foreach ($data as $row){
+        $item = $row["Item"];
+        $data2 = $conn->query("SELECT * FROM `itemtype` WHERE ID = '$item'")->fetchAll();
+
+        foreach ($data2 as $row2) {
+            $colors = explode(",", $row2["Colors"]);
+            $sizes = explode(",", $row2["Sizes"]);
+        }
         ?>
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-5">
             <div class="card mb-3">
@@ -45,19 +52,54 @@ if ($_POST["itemID"] != null) {
                                     <p class="card-title text-center"><?= $row["ProductName"]?></p>
                                 </div>
                                 <div class="col-xl-1 col-lg-1 col-md-2 col-5">
-                                    <div class="dropdown shadow-none">
-                                        <button class="btn btn-secondary dropdown-toggle shadow-none" type="button" id="<?="dropdownMenuButton" . $num?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="btn-group">
+                                        <button id="<?="dropdownMenuAantal" . $num?>" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
                                             1
                                         </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item aantal" data-order="<?=$num?>" href="#">1</a>
-                                            <a class="dropdown-item aantal" data-order="<?=$num?>" href="#">2</a>
-                                            <a class="dropdown-item aantal" data-order="<?=$num?>" href="#">3</a>
-                                            <a class="dropdown-item aantal" data-order="<?=$num?>" href="#">4</a>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+                                            <button class="dropdown-item aantal" data-order="<?=$num?>" type="button">1</button>
+                                            <button class="dropdown-item aantal" data-order="<?=$num?>" type="button">2</button>
+                                            <button class="dropdown-item aantal" data-order="<?=$num?>" type="button">3</button>
+                                            <button class="dropdown-item aantal" data-order="<?=$num?>" type="button">4</button>
+                                            <button class="dropdown-item aantal" data-order="<?=$num?>" type="button">5</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-2 col-lg-2 col-md-2 col-7">
+                                <div class="col-xl-1 col-lg-1 col-md-2 col-5 mb-2">
+                                    <div class="btn-group">
+                                        <button id="<?="dropdownMenuSizes" . $num?>" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+                                            L
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+                                            <?php
+                                            foreach ($sizes as $size) {
+                                                ?>
+                                                <button class="dropdown-item size" data-order="<?=$num?>" type="button"><?=$size?></button>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-1 col-lg-1 col-md-2 col-5">
+                                    <div class="btn-group">
+                                        <button id="<?="dropdownMenuColors" . $num?>" type="button" class="btn btn-secondary dropdown-toggle my-dropdown-toggle" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+                                            <div style="background: #<?=$row['Default_Color']?>;border-radius: 50%;width: 1.5em;height: 1.5em;"></div>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+                                            <?php
+                                            foreach ($colors as $color) {
+                                                ?>
+                                                <button class="my-dropdown-item color" data-order="<?=$num?>" type="button">
+                                                    <div style="background: #<?=$color?>; border: solid black 1px;border-radius: 50%;width: 1.5em;height: 1.5em;"></div>
+                                                </button>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-6 text-center mt-2">
                                     <p id="<?="priceText" . $num?>"><?=$row["Price"]?> €</p>
                                 </div>
                                 <div class="col-xl-1 col-lg-1 col-md-1 col-2 d-none d-md-block">
@@ -92,14 +134,14 @@ if ($_POST["itemID"] != null) {
     ?>
     <div class="row">
         <div class="col mt-5 text-center">
-            <h4>Your cart is empty</h4>
+            <h4>Je winkelwagen is leeg</h4>
         </div>
     </div>
     <?php
 }
 ?>
 
-<div id="formContainer" class="row" style="display: none">
+<div id="formContainer" class="row p-3" style="display: none">
     <nav class="mb-5" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li onclick="showCart()" class="breadcrumb-item"><a href="#">Winkelwagen</a></li>
@@ -196,10 +238,22 @@ if ($_POST["itemID"] != null) {
                                 </div>
                                 <div class="col-xl-1 col-lg-1 col-md-2 col-5">
                                     <div class="dropdown shadow-none">
-                                        <p id="<?="dropdownMenuButtonCheck" . $num2?>">1</p>
+                                        <p id="<?="dropdownMenuAantalCheck" . $num2?>">1</p>
                                     </div>
                                 </div>
-                                <div class="col-xl-2 col-lg-2 col-md-2 col-7">
+                                <div class="col-xl-1 col-lg-1 col-md-2 col-5">
+                                    <div class="dropdown shadow-none">
+                                        <p id="<?="dropdownMenuSizesCheck" . $num2?>">L</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-1 col-lg-1 col-md-2 col-5">
+                                    <div class="dropdown shadow-none">
+                                        <div id="<?="dropdownMenuColorsCheck" . $num2?>">
+                                            <div style="background: #<?=$row['Default_Color']?>; border: solid black 1px; border-radius: 50%;width: 1.5em;height: 1.5em;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-6 text-center">
                                     <p id="<?="priceText2" . $num2?>"><?=$row["Price"]?> €</p>
                                 </div>
                             </div>
@@ -244,12 +298,27 @@ if ($_POST["itemID"] != null) {
     $(document).on('click', '.aantal', function(){
         var cartID = $(this).data("order");
 
-        $( "#dropdownMenuButton" + cartID ).text($(this).html());
-        $( "#dropdownMenuButtonCheck" + cartID ).text("x" + $(this).html());
-        console.log("set button to: " + $(this).html() );
+        $( "#dropdownMenuAantal" + cartID ).text($(this).html());
+        $( "#dropdownMenuAantalCheck" + cartID ).text("x" + $(this).html());
         cartAantal[cartID]= $(this).html();
         totalPrice = 0;
         prices.forEach(calcTotalPrice);
+    });
+
+    $(document).on('click', '.size', function(){
+        var cartID = $(this).data("order");
+
+        $( "#dropdownMenuSizes" + cartID ).text($(this).html());
+        $( "#dropdownMenuSizesCheck" + cartID ).text($(this).html());
+        cartSizes[cartID]= $(this).html();
+    });
+
+    $(document).on('click', '.color', function(){
+        var cartID = $(this).data("order");
+
+        $( "#dropdownMenuColors" + cartID ).children("div").css("background-color", $(this).children("div").css("background-color"))
+        $( "#dropdownMenuColorsCheck" + cartID ).children("div").css("background-color", $(this).children("div").css("background-color"))
+        cartColors[cartID]= $(this).children("div").css("background-color");
     });
 
     $(document).ready(function(){
@@ -285,6 +354,8 @@ if ($_POST["itemID"] != null) {
                     inputPostcode:formValues[7].value,
                     inputInstructies:formValues[8].value,
                     inputAantal:cartAantal,
+                    inputSizes:cartSizes,
+                    inputColors:cartColors,
                 },
                 success:function(data)
                 {
@@ -299,6 +370,7 @@ if ($_POST["itemID"] != null) {
             document.getElementById('addCart' + Cart.getItem(sessionStorage.key(i))).style.display = "none";
             document.getElementById('removeCart' + Cart.getItem(sessionStorage.key(i))).style.display = "block";
             cartAantal[i] = 1;
+            cartSizes[i] = 'L';
             prices[i] = document.getElementById('priceText'+i).innerText;
         }
     }
@@ -307,6 +379,7 @@ if ($_POST["itemID"] != null) {
         Cart.removeItem(cartId);
         console.log("removed Cart");
         cartAantal.length = 0;
+        cartSizes.length = 0;
         prices.length = 0;
         totalPrice = 0;
         pricePerCartId = 0
@@ -318,10 +391,9 @@ if ($_POST["itemID"] != null) {
     function calcTotalPrice(value, index) {
         pricePerCartId = parseFloat(value) * cartAantal[index];
         totalPrice += pricePerCartId;
-        console.log(index);
-        document.getElementById('priceText'+index).innerText = (Math.round((pricePerCartId + Number.EPSILON) * 100) / 100).toString();
-        document.getElementById('priceText2'+index).innerText = (Math.round((pricePerCartId + Number.EPSILON) * 100) / 100).toString();
-        document.getElementById('totalPriceText').innerHTML = (Math.round((totalPrice + Number.EPSILON) * 100) / 100).toString();
+        document.getElementById('priceText'+index).innerText = (Math.round((pricePerCartId + Number.EPSILON) * 100) / 100).toString() + "€";
+        document.getElementById('priceText2'+index).innerText = (Math.round((pricePerCartId + Number.EPSILON) * 100) / 100).toString() + "€";
+        document.getElementById('totalPriceText').innerHTML = (Math.round((totalPrice + Number.EPSILON) * 100) / 100).toString() + "€";
         document.getElementById('totalPriceText2').innerHTML = (Math.round((totalPrice + Number.EPSILON) * 100) / 100).toString() + "€";
     }
 

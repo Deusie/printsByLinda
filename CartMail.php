@@ -28,6 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Instructies = filter_var ( $_POST['inputInstructies'], FILTER_SANITIZE_STRING);
 
     $aantalArr = $_POST['inputAantal'];
+    $sizesArr = $_POST['inputSizes'];
+    $colorsArr = $_POST['inputColors'];
 
     $IDS = filter_var ( $_POST["itemID"], FILTER_SANITIZE_STRING);
 
@@ -141,6 +143,8 @@ td {
 <tr>
         <th><font face="Arial, Helvetica, sans-serif">Aantal</font></th>
         <th><font face="Arial, Helvetica, sans-serif">product</font></th>
+        <th><font face="Arial, Helvetica, sans-serif">Maat</font></th>
+        <th><font face="Arial, Helvetica, sans-serif">Kleur</font></th>
         <th><font face="Arial, Helvetica, sans-serif">prijs per eenheid</font></th>
         <th><font face="Arial, Helvetica, sans-serif">Totaal</font></th>
       </tr>';
@@ -156,6 +160,8 @@ td {
     <tr>
         <td>'.$aantalArr[$i].'</td>
         <td>'.$row['ProductName'].'</td>
+        <td>'.$sizesArr[$i].'</td>
+        <td style=" padding: 50px;background-color:'.$colorsArr[$i].'"></td>
         <td>'.$row['Price'].'</td>
         <td>'.$aantalArr[$i] * $row['Price'].'</td>
     </tr>

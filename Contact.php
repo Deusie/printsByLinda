@@ -33,7 +33,7 @@ theme_header('contact');
             <div class="jumbotron" style="border-radius: 0;">
                 <h1 style="font-size:5vw" class="display-4 mb-5">CONTACT US</h1>
                     <p class="mb-4 lead">
-                        <i style="font-style: normal" class="bi bi-whatsapp"> 06 32769755</i>
+                        <i style="font-style: normal" class="bi bi-whatsapp"> 06 31769755</i>
                     </p>
 
                     <p class="lead">

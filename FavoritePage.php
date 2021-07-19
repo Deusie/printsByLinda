@@ -76,7 +76,6 @@ include("Footer.php");
             console.log("added cart" + cartId)
             document.getElementById('addCart' + cartId).style.display = "none";
             document.getElementById('removeCart' + cartId).style.display = "inline";
-            $('#cartModal').modal();
         }
     }
 </script>

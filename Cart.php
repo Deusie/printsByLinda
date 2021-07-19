@@ -36,7 +36,9 @@ include("Footer.php");
     Cart = window.sessionStorage;
     let totalPrice = 0;
     let pricePerCartId = 0;
-    const cartAantal = [];
+    let cartAantal = [];
+    let cartSizes = [];
+    let cartColors = [];
     const prices = [];
     let formValues;
     $(document).ready(function(){
@@ -48,7 +50,6 @@ include("Footer.php");
         for (var i = 0; i < Cart.length; i++){
             ids += Cart.getItem(Cart.key(i)) + ",";
         }
-        console.log(ids);
         ids = ids.substring(0, ids.length - 1);
 
         $.ajax({
