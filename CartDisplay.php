@@ -335,6 +335,7 @@ if ($_POST["itemID"] != null) {
         });
 
         $(document).on('click', '.bestellen', function(){
+            $(this).attr("disabled", true);
             var ids = "";
             for (var i = 0; i < Cart.length; i++){
                 ids += Cart.getItem(Cart.key(i)) + ",";
@@ -371,6 +372,7 @@ if ($_POST["itemID"] != null) {
             document.getElementById('removeCart' + Cart.getItem(sessionStorage.key(i))).style.display = "block";
             cartAantal[i] = 1;
             cartSizes[i] = 'L';
+            cartColors[i] = $( "#dropdownMenuColorsCheck" + i ).children("div").css("background-color");
             prices[i] = document.getElementById('priceText'+i).innerText;
         }
     }

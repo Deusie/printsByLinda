@@ -18,21 +18,20 @@ function theme_header($pageShortName) {
             ),' >
         </i>
     </a>
-    <a id="searchIcon" style="cursor:pointer;" onclick="searchBar()" class="d-md-none ml-3">
+   
+    <a id="searchIcon" style="cursor:pointer;" onclick="searchBar()" class="d-md-none ml-2 mr-2">
         <i style="font-size: 1.3em; color: white" class="bi bi-search"></i>
     </a>
-    <form action="SearchSort.php" method="post" id="SearchBar" style="display: none; width: 50%" class="form-inline my-2 my-lg-0 d-md-none">
-        <div class="form-group has-search">
+    <!--  voor mobile   -->
+    <form action="SearchSort.php" method="post" id="SearchBar" style="display: none; width: 30%;" class="form-inline my-2 my-lg-0 d-md-none">
+        <div class="form-group has-search mb-0">
             <span class="form-control-feedback">
-                <svg style="color: white" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
-                    <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
-                </svg>
+                <i style="font-size: 1.3em; color: white" class="bi bi-search"></i>
             </span>
             <input name="searchField" style="background-color: black; border-radius: 20px 20px 20px 20px;-moz-border-radius: 20px 20px 20px 20px;-webkit-border-radius: 20px 20px 20px 20px;border: 0 solid #000000;" type="text" class="form-control" placeholder="Search">
         </div>
     </form>
-    <button class="navbar-toggler ml-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -56,6 +55,7 @@ function theme_header($pageShortName) {
 		</li>
 	</ul>
     </div>
+<!--  dit is large screens   -->
     <form action="SearchSort.php" method="post" id="SearchBar" class="form-inline my-2 my-lg-0 d-none d-md-block">
         <div class="form-group has-search">
             <span class="form-control-feedback">

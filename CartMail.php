@@ -89,12 +89,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pdf->SetFillColor(120, 172, 255);
 
 // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
-
-// set some text for example
-    $factuurNr = "FACTUURNR: " . rand(1,10);
+    $factuurNr = uniqid() . str_replace("/", "", date("m/d"));
     $Datum = "DATUM: " . date("d/m/Y");
-// Multicell test
-    $pdf->MultiCell(0, 10, $factuurNr." ".$Datum, 0, 'J', 1, 1, '', '', true, 0, false, true, 10, 'M');
+
+    $pdf->MultiCell(0, 10, "ORDERNR: " .$factuurNr." ".$Datum, 0, 'J', 1, 1, '', '', true, 0, false, true, 10, 'M');
 
 
     $pdf->Ln(4);
@@ -190,6 +188,24 @@ td {
     $pdf->lastPage();
 
 //Close and output PDF document
+    $filename= $factuurNr.".pdf";
+
+    //xampp
+//    $orderFolderPath = "C:\\xampp\\htdocs\\printsbylinda\\Orders";
+//    $fileLocation = $orderFolderPath . "\\" .str_replace("/", "", date("m/Y"));
+//    if (!file_exists($fileLocation)){
+//        mkdir($fileLocation);
+//    }
+//    $fileNL = $fileLocation."\\".$filename;
+
+    //Server
+    $orderFolderPath = __DIR__ ."/"."Orders";
+    $fileLocation = $orderFolderPath."/". str_replace("/", "", date("m/Y"));
+    if (!file_exists($fileLocation)){
+        mkdir($fileLocation);
+    }
+    $fileNL = $fileLocation."/".$filename;
+
     $pdfFile = $pdf->Output('factuur', 'S');
 
     //Create an instance; passing `true` enables exceptions
@@ -220,6 +236,8 @@ td {
         $mail->AltBody = 'alt body';
 
         $mail->send();
+        //save pdf to server
+        $pdf->Output($fileNL, 'F');
         echo'
         <div class="row text-center mt-5">
             <div class="col">
@@ -235,7 +253,7 @@ td {
         </div>';
 
     } catch (Exception $e) {
-        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        echo "Er is iets fout gegaan probeer het later opnieuw";
     }
 }
 ?>
