@@ -1,5 +1,5 @@
 <?php
-include 'configdbPDO.php';
+include 'config/configdbPDO.php';
 if ($_POST["itemID"] != null) {
     $data = $conn->query("SELECT * FROM product WHERE ID IN (" . $_POST["itemID"] . ") ORDER BY ID ASC")->fetchAll();
 

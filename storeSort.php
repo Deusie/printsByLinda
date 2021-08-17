@@ -1,5 +1,5 @@
 <?php
-include 'configdbPDO.php';
+include 'config/configdbPDO.php';
 
 
 $data = $conn->query("SELECT * FROM product ORDER BY ".$_POST["column_name"]." ".$_POST["order"]."")->fetchAll();

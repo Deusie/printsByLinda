@@ -1,7 +1,7 @@
 <?php
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf.php');
-require_once('configdbPDO.php');
+require_once('config/configdbPDO.php');
 
 //define input variables
 $voorNaam = 'hans';
@@ -18,6 +18,7 @@ $Aantal = 3;
 $totalPrice = 0;
 $verzendKosten = '2.50';
 
+$Rekeningnummer = "NL25 ABNA 0102 9630 88";
 
 
 
@@ -26,10 +27,9 @@ $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('Nicola Asuni');
-$pdf->SetTitle('TCPDF Example 005');
-$pdf->SetSubject('TCPDF Tutorial');
-$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+$pdf->SetAuthor('PrintsByLinda');
+$pdf->SetTitle('Factuur');
+$pdf->SetSubject('Factuur');
 
 // set default header data
 $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
@@ -72,6 +72,20 @@ $pdf->setCellPaddings(2, 1, 2, 1);
 // set cell margins
 $pdf->setCellMargins(1, 2, 1, 1);
 
+
+// create some HTML content
+$html = '<p>
+<br>
+Hallo '.$voorNaam.',<br><br>
+Hartelijk bedankt voor je bestelling en vertrouwen in ons!<br>
+Hieronder vind je het overzicht van je bestelling:<br>
+</p>
+
+';
+
+// output the HTML content
+$pdf->writeHTML($html, true, false, true, false, '');
+
 // set color for background
 $pdf->SetFillColor(122, 193, 253);
 
@@ -94,7 +108,7 @@ $pdf->MultiCell(57, 10, 'instructies', 0, 'L', 0, 1, '', '', true);
 
 $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 
-$pdf->Line(15, 54, 195, 54, $style);
+$pdf->Line(15, 82, 195, 82, $style);
 // Vertical alignment
 $pdf->MultiCell(57, 40, $voorNaam." ".$Tussenvoegsel." ".$Achternaam, 0, 'J', 0, 0, '', '', true, 0, true, true, 40, 'T');
 $pdf->MultiCell(57, 40, $straatNaam." ".$huisNummer."<br>".$Postcode." ".$Plaats, 0, 'J', 0, 0, '', '', true, 0, true, true, 40, 'T');
@@ -162,6 +176,18 @@ $floatVerzendkosten = (float)$verzendKosten;
 $totalPrice2 = $totalPrice + $floatVerzendkosten;
 $pdf->MultiCell(100, 10, "TOTAAL: ".$totalPrice2, 0, 'J', 1, 1, '', '', true, 0, false, true, 10, 'M');
 
+$html = '
+<p>
+    Het totaal bedrag kunt u over maken naar<br> 
+    Rekeningnummer: '.$Rekeningnummer.'
+    T.n.v. Prints By Linda
+    Onder vermelding van:'. $factuurNr .' 
+</p>
+
+';
+
+// output the HTML content
+$pdf->writeHTML($html, true, false, true, false, '');
 
 // move pointer to last page
 $pdf->lastPage();

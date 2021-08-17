@@ -1,5 +1,5 @@
 <?php
-include 'configdbPDO.php';
+include 'config/configdbPDO.php';
 ?>
 
 <!DOCTYPE html>
@@ -37,19 +37,19 @@ theme_header('home');
         <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="Carousel/Print.png" class="d-block w-100" alt="...">
+                    <img src="assets/Carousel/Print.png" class="d-block w-100" alt="...">
                     <div class="carousel-caption d-none d-md-block">
                         <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="Carousel/printss.png" class="d-block w-100" alt="...">
+                    <img src="assets/Carousel/printss.png" class="d-block w-100" alt="...">
                     <div class="carousel-caption d-none d-md-block">
                         <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="Carousel/Canva%20-%20Silhouette%20of%20Two%20People%20Standing%20on%20Seashore%20During%20Sunset.jpg" class="d-block w-100" alt="...">
+                    <img src="assets/Carousel/Canva%20-%20Silhouette%20of%20Two%20People%20Standing%20on%20Seashore%20During%20Sunset.jpg" class="d-block w-100" alt="...">
                     <div class="carousel-caption d-none d-md-block">
                         <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
                     </div>
@@ -62,19 +62,19 @@ theme_header('home');
         <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="Carousel/couple-690047_1920.jpg" class="d-block w-100" alt="...">
+                    <img src="assets/Carousel/couple-690047_1920.jpg" class="d-block w-100" alt="...">
                     <div class="carousel-caption">
                         <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="Carousel/couple-690047_1920.jpg" class="d-block w-100" alt="...">
+                    <img src="assets/Carousel/couple-690047_1920.jpg" class="d-block w-100" alt="...">
                     <div class="carousel-caption">
                         <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="Carousel/couple-690047_1920.jpg" class="d-block w-100" alt="...">
+                    <img src="assets/Carousel/couple-690047_1920.jpg" class="d-block w-100" alt="...">
                     <div class="carousel-caption">
                         <a class="btn btn-outline-light" href="Store.php">SHOP NOW</a>
                     </div>

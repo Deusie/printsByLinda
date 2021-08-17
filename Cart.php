@@ -1,5 +1,5 @@
 <?php
-include 'configdbPDO.php';
+include 'config/configdbPDO.php';
 ?>
 <!DOCTYPE html>
 <html>

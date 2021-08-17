@@ -102,15 +102,15 @@ if (!defined('K_PATH_IMAGES')) {
 
 if (!defined('PDF_HEADER_LOGO')) {
 	$tcpdf_header_logo = '';
-	if (@file_exists(K_PATH_IMAGES.'../Logos/LogosPrints.png')) {
-		$tcpdf_header_logo = '../Logos/LogosPrints.png';
+	if (@file_exists(K_PATH_IMAGES.'assets/Logos/LogosPrints.png')) {
+		$tcpdf_header_logo = 'assets/Logos/LogosPrints.png';
 	}
 	define ('PDF_HEADER_LOGO', $tcpdf_header_logo);
 }
 
 if (!defined('PDF_HEADER_LOGO_WIDTH')) {
 	if (!empty($tcpdf_header_logo)) {
-		define ('PDF_HEADER_LOGO_WIDTH', 30);
+		define ('PDF_HEADER_LOGO_WIDTH', 35);
 	} else {
 		define ('PDF_HEADER_LOGO_WIDTH', 0);
 	}

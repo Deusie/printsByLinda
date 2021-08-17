@@ -1,5 +1,5 @@
 <?php
-include 'configdbPDO.php';
+include 'config/configdbPDO.php';
 
 if ($_POST["itemID"] != null) {
 
@@ -274,23 +274,6 @@ if ($_POST["itemID"] != null) {
         <button class="btn btn-primary btn-lg bestellen">Door naar betalen</button>
     </div>
 </div>
-
-<!--<div id="paymentContainer" class="row" style="display: none">-->
-<!--    <nav class="mb-5" aria-label="breadcrumb">-->
-<!--        <ol class="breadcrumb">-->
-<!--            <li onclick="showCart()" class="breadcrumb-item"><a href="#">Winkelwagen</a></li>-->
-<!--            <li onclick="showForm()" class="breadcrumb-item"><a href="#">Bezorgadres</a></li>-->
-<!--            <li onclick="showInfoCheck()" class="breadcrumb-item"><a href="#">Gegevens controleren</a></li>-->
-<!--            <li class="breadcrumb-item active" aria-current="page">Betaalopties</li>-->
-<!--        </ol>-->
-<!--    </nav>-->
-<!--    <div class="col">-->
-<!--        <P>Op dit moment is het alleen mogelijk om via factuur te betalen</P>-->
-<!--        <P></P>-->
-<!--    </div>-->
-<!--    <button class="btn btn-primary bestellen">Bestellen</button>-->
-<!--</div>-->
-
 <script>
     Cart = window.sessionStorage;
 
@@ -341,7 +324,6 @@ if ($_POST["itemID"] != null) {
                 ids += Cart.getItem(Cart.key(i)) + ",";
             }
             ids = ids.substring(0, ids.length - 1);
-
             $.ajax({
                 url:"CartMail.php",
                 method:"POST",
@@ -357,6 +339,7 @@ if ($_POST["itemID"] != null) {
                     inputAantal:cartAantal,
                     inputSizes:cartSizes,
                     inputColors:cartColors,
+                    TotalPrice:document.getElementById('totalPriceText2').innerText,
                 },
                 success:function(data)
                 {

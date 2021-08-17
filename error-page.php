@@ -20,20 +20,7 @@ include_once('NavBar.php');
 theme_header('');
 ?>
 
-<div class="container">
-    <div class="row mt-5 text-center justify-content-center">
-        <div class="col-12 mt-5">
-            <div class="jumbotron" style="background-color: #923434">
-                <h1 style="font-size:5vw" class="display-4 mb-1">ONZE WEBSITE</h1>
-                <h3 style="font-size:3vw" class="display-4 mb-3">heeft even rust nodig</h3>
-                <p class="mb-4 lead">
-                    probeert u het later nog is
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
-
+<h2>Error page not found</h2>
 <footer class="container-fluid pt-3 pb-5 fixed-bottom" style="background-color: #535353">
     <div class="container">
         <div class="row">

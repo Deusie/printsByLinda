@@ -8,10 +8,10 @@ use PHPMailer\PHPMailer\Exception;
 
 //Load Composer's autoloader
 require 'vendor/autoload.php';
-require 'EmailCredentials.php';
+require 'config/EmailCredentials.php';
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf.php');
-require_once('configdbPDO.php');
+require_once('config/configdbPDO.php');
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -32,6 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $colorsArr = $_POST['inputColors'];
 
     $IDS = filter_var ( $_POST["itemID"], FILTER_SANITIZE_STRING);
+    $totalPrice = filter_var ( $_POST["TotalPrice"], FILTER_SANITIZE_STRING);
+
+    $Rekeningnummer = "NL25 ABNA 0102 9630 88";
 
 
 // create new PDF document
@@ -39,10 +42,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // set document information
     $pdf->SetCreator(PDF_CREATOR);
-    $pdf->SetAuthor('Nicola Asuni');
-    $pdf->SetTitle('TCPDF Example 005');
-    $pdf->SetSubject('TCPDF Tutorial');
-    $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+    $pdf->SetAuthor('PrintsByLinda');
+    $pdf->SetTitle('Factuur');
+    $pdf->SetSubject('Factuur');
 
 // set default header data
     $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
@@ -85,14 +87,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // set cell margins
     $pdf->setCellMargins(1, 2, 1, 1);
 
+    $html = '<p>
+                <br>
+                Hallo '.$voorNaam.',<br><br>
+                Hartelijk bedankt voor je bestelling en het vertrouwen in ons!<br>
+                Hieronder vind je het overzicht van je bestelling:<br>
+            </p>';
+
+// output the HTML content
+    $pdf->writeHTML($html, true, false, true, false, '');
+
 // set color for background
     $pdf->SetFillColor(120, 172, 255);
 
 // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
-    $factuurNr = uniqid() . str_replace("/", "", date("m/d"));
+    $text = uniqid() . str_replace("/", "", date("m/d"));
+
+    $splitstring1 = substr($text, 0, floor(strlen($text) / 2));
+    $splitstring2 = substr($text, floor(strlen($text) / 2));
+
+    if (substr($splitstring1, 0, -1) != ' ' AND substr($splitstring2, 0, 1) != ' ')
+    {
+        $middle = strlen($splitstring1) + strpos($splitstring2, ' ') + 1;
+    }
+    else
+    {
+        $middle = strrpos(substr($text, 0, floor(strlen($text) / 2)), ' ') + 1;
+    }
+
+    $string1 = substr($text, 0, $middle);  // "The Quick : Brown Fox Jumped "
+    $string2 = substr($text, $middle);  // "Over The Lazy / Dog"
+
+    $factuurNr = $string2;
     $Datum = "DATUM: " . date("d/m/Y");
 
-    $pdf->MultiCell(0, 10, "ORDERNR: " .$factuurNr." ".$Datum, 0, 'J', 1, 1, '', '', true, 0, false, true, 10, 'M');
+    $pdf->MultiCell(0, 10, "factuur: " .$factuurNr." ".$Datum, 0, 'J', 1, 1, '', '', true, 0, false, true, 10, 'M');
 
 
     $pdf->Ln(4);
@@ -105,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0));
 
-    $pdf->Line(15, 54, 195, 54, $style);
+    $pdf->Line(15, 82, 195, 82, $style);
 // Vertical alignment
     $pdf->MultiCell(57, 40, $voorNaam." ".$Tussenvoegsel." ".$Achternaam, 0, 'J', 0, 0, '', '', true, 0, true, true, 40, 'T');
     $pdf->MultiCell(57, 40, $straatNaam." ".$huisNummer."<br>".$Postcode." ".$Plaats, 0, 'J', 0, 0, '', '', true, 0, true, true, 40, 'T');
@@ -151,9 +180,7 @@ td {
 
     $data = $conn->query("SELECT * FROM product WHERE ID IN (" . $IDS . ") ORDER BY ID ASC")->fetchAll();
     $i = 0;
-    $totalPrice = 0;
     foreach ($data as $row) {
-        $totalPrice += $aantalArr[$i] * $row['Price'];
         $tbl .= '
     <tr>
         <td>'.$aantalArr[$i].'</td>
@@ -171,17 +198,27 @@ td {
 
     $pdf->setCellMargins(75, 1, 1, 1);
 
-    $verzendKosten = '2.50';
 
-    $BTW = round((21 / 100) * $totalPrice, 2);
+
+    $BTW = round(0.21 * $totalPrice, 2);
     $subTotal = $totalPrice - $BTW;
 
     $pdf->MultiCell(100, 10, "SUBTOTAAL: ".$subTotal, 'B', 'J', 0, 1, '', '', true, 0, false, true, 10, 'M');
     $pdf->MultiCell(100, 10, "BTW: ".$BTW, 'B', 'J', 0, 1, '', '', true, 0, false, true, 10, 'M');
-    $pdf->MultiCell(100, 10, "Verzendkosten: ".$verzendKosten, 'B', 'J', 0, 1, '', '', true, 0, false, true, 10, 'M');
-    $floatVerzendkosten = (float)$verzendKosten;
-    $totalPrice2 = $totalPrice + $floatVerzendkosten;
-    $pdf->MultiCell(100, 10, "TOTAAL: ".$totalPrice2, 0, 'J', 1, 1, '', '', true, 0, false, true, 10, 'M');
+    $pdf->MultiCell(100, 10, "TOTAAL: ".$totalPrice, 0, 'J', 1, 1, '', '', true, 0, false, true, 10, 'M');
+
+    $html = '
+<p>
+    Het totaal bedrag kunt u over maken naar<br> 
+    Rekeningnummer: '.$Rekeningnummer.'<br>
+    T.n.v. Prints By Linda<br>
+    Onder vermelding van: '. $factuurNr .'<br> 
+</p>
+
+';
+
+// output the HTML content
+    $pdf->writeHTML($html, true, false, true, false, '');
 
 
 // move pointer to last page
@@ -206,7 +243,7 @@ td {
     }
     $fileNL = $fileLocation."/".$filename;
 
-    $pdfFile = $pdf->Output('factuur', 'S');
+    $pdfFile = $pdf->Output('Factuur.pdf', 'S');
 
     //Create an instance; passing `true` enables exceptions
     $mail = new PHPMailer(true);
@@ -228,32 +265,42 @@ td {
         $mail->addReplyTo(EMAIL, 'Information');
 
         //Attachments
-        $mail->addStringAttachment($pdfFile, 'test.pdf');
+        $mail->addStringAttachment($pdfFile, 'Factuur.pdf');
 
         //Content
         $mail->Subject = 'bedankt voor u bestelling!!';
-        $mail->Body = 'This is the HTML message body <b>in bold!</b>';
-        $mail->AltBody = 'alt body';
+        $mail->Body = '<p>
+                Hallo '.$voorNaam.',<br>
+                Wat super leuk dat je bij ons hebt besteld!!<br>
+                We hebben je bestelling in goede orde ontvangen en<br>
+                zodra de betaling binnen is gaan we direct aan de slag<br>
+                <br>
+                Al onze producten worden met de hand gemaakt<br>
+                Waardoor wij een leveringstijd hanteren van 3 a 4 dagen<br>
+                alvast bedankt voor u geduld <br>
+            </p>';
+        $mail->AltBody = 'Er is een fout opgetreden probeer het nog is';
 
         $mail->send();
         //save pdf to server
         $pdf->Output($fileNL, 'F');
-        echo'
-        <div class="row text-center mt-5">
-            <div class="col">
-                <h1>BEDANKT VOOR U BESTELLING!!</h1>
-            </div>
-        </div>
-        <div class="row mt-5 mb-5 text-center">
-            <div class="col">
-                <h3>Op dit moment is het alleen maar mogelijk om met een factuur te betalen</h3>
-                <h4 class="mt-4 mb-5">Gelieve de stappen in uw mail te volgen</h4>
-                <h6 class="mb-5">Dan gaan wij alvast met u bestelling aan de slag :)</h6>
-            </div>
-        </div>';
+//        echo'
+//        <div class="row text-center mt-5">
+//            <div class="col">
+//                <h1>BEDANKT VOOR U BESTELLING!!</h1>
+//            </div>
+//        </div>
+//        <div class="row mt-5 mb-5 text-center">
+//            <div class="col">
+//                <h3>Op dit moment is het alleen maar mogelijk om met een factuur te betalen</h3>
+//                <h4 class="mt-4 mb-5">Gelieve de stappen in uw mail te volgen</h4>
+//                <h6 class="mb-5">Dan gaan wij alvast met u bestelling aan de slag :)</h6>
+//            </div>
+//        </div>';
 
     } catch (Exception $e) {
-        echo "Er is iets fout gegaan probeer het later opnieuw";
+        echo "Er is iets fout gegaan controleer uw gegevens en probeer het opnieuw";
+        echo "Als dit probleem zich voor blijft doen neem dan contact met ons op";
     }
 }
 ?>
