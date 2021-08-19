@@ -126,7 +126,7 @@ if ($_POST["itemID"] != null) {
     <div id="bestellenContainer" class="row p-3" style="background-color: #b8b8b8; min-height: 110px">
         <div class="col-md-12" >
             <p id="totalPriceText" class="text-right">totaal artikelen </p>
-            <button onclick="showForm()" type="button" class="float-right btn btn-outline-primary">Verder naar bestellen</button>
+            <button onclick="showStep('none','block','none','none')" type="button" class="float-right btn btn-outline-primary">Verder naar bestellen</button>
         </div>
     </div>
     <?php
@@ -144,7 +144,7 @@ if ($_POST["itemID"] != null) {
 <div id="formContainer" class="row p-3" style="display: none">
     <nav class="mb-5" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li onclick="showCart()" class="breadcrumb-item"><a href="#">Winkelwagen</a></li>
+            <li onclick="showStep('block','none','none','none')" class="breadcrumb-item"><a href="#">Winkelwagen</a></li>
             <li class="breadcrumb-item active" aria-current="page">Bezorgadres</li>
         </ol>
     </nav>
@@ -196,15 +196,15 @@ if ($_POST["itemID"] != null) {
             </div>
         </div>
 
-        <button type="submit" onclick="showInfoCheck()" class="btn btn-primary">Volgende</button>
+        <button type="submit" onclick="showStep('none','none','block','none')" class="btn btn-primary">Volgende</button>
     </form>
 </div>
 
 <div id="infoCheckContainer" class="row" style="display: none">
     <nav class="mb-5" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li onclick="showCart()" class="breadcrumb-item"><a href="#">Winkelwagen</a></li>
-            <li onclick="showForm()" class="breadcrumb-item"><a href="#">Bezorgadres</a></li>
+            <li onclick="showStep('block', 'none', 'none', 'none')" class="breadcrumb-item"><a href="#">Winkelwagen</a></li>
+            <li onclick="showStep('none','block','none', 'none')" class="breadcrumb-item"><a href="#">Bezorgadres</a></li>
             <li class="breadcrumb-item active" aria-current="page">Gegevens controleren</li>
         </ol>
     </nav>
@@ -271,9 +271,21 @@ if ($_POST["itemID"] != null) {
             <p class="text-center float-left">Totaal: </p>
             <p id="totalPriceText2" class="text-right">0.00€</p>
         </div>
-        <button class="btn btn-primary btn-lg bestellen">Door naar betalen</button>
+        <button onclick="showStep('none','none','none','block')" class="btn btn-primary btn-lg">Door naar betalen</button>
     </div>
 </div>
+
+<div id="paymentContainer" class="row" style="display: none">
+    <nav class="mb-5" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li onclick="showStep('block', 'none', 'none', 'none')" class="breadcrumb-item"><a href="#">Winkelwagen</a></li>
+            <li onclick="showStep('none','block','none', 'none')" class="breadcrumb-item"><a href="#">Bezorgadres</a></li>
+            <li onclick="showStep('none','none','block', 'none')" class="breadcrumb-item"><a href="#">Gegevens controleren</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Betalen</li>
+        </ol>
+    </nav>
+</div>
+
 <script>
     Cart = window.sessionStorage;
 
@@ -339,7 +351,7 @@ if ($_POST["itemID"] != null) {
                     inputAantal:cartAantal,
                     inputSizes:cartSizes,
                     inputColors:cartColors,
-                    TotalPrice:document.getElementById('totalPriceText2').innerText,
+                    TotalPrice:totalPrice,
                 },
                 success:function(data)
                 {
@@ -382,41 +394,12 @@ if ($_POST["itemID"] != null) {
         document.getElementById('totalPriceText2').innerHTML = (Math.round((totalPrice + Number.EPSILON) * 100) / 100).toString() + "€";
     }
 
-
-
-    function showForm() {
-        document.getElementById('cartContainer').style.display = "none";
-        document.getElementById('bestellenContainer').style.display = "none";
-        document.getElementById('formContainer').style.display = "block";
-        document.getElementById('infoCheckContainer').style.display = "none";
-        // document.getElementById('paymentContainer').style.display = "none";
-
+    function showStep(cart, form, info, pay){
+        document.getElementById('cartContainer').style.display = cart;
+        document.getElementById('bestellenContainer').style.display = cart;
+        document.getElementById('formContainer').style.display = form;
+        document.getElementById('infoCheckContainer').style.display = info;
+        document.getElementById('paymentContainer').style.display = pay;
     }
-
-    function showCart(){
-        document.getElementById('cartContainer').style.display = "block";
-        document.getElementById('bestellenContainer').style.display = "block";
-        document.getElementById('formContainer').style.display = "none";
-        document.getElementById('infoCheckContainer').style.display = "none";
-        // document.getElementById('paymentContainer').style.display = "none";
-
-    }
-
-    function showInfoCheck(){
-        document.getElementById('cartContainer').style.display = "none";
-        document.getElementById('bestellenContainer').style.display = "none";
-        document.getElementById('formContainer').style.display = "none";
-        document.getElementById('infoCheckContainer').style.display = "block";
-        // document.getElementById('paymentContainer').style.display = "none";
-
-    }
-
-    // function showPayment(){
-    //     document.getElementById('cartContainer').style.display = "none";
-    //     document.getElementById('bestellenContainer').style.display = "none";
-    //     document.getElementById('formContainer').style.display = "none";
-    //     document.getElementById('infoCheckContainer').style.display = "none";
-    //     document.getElementById('paymentContainer').style.display = "block";
-    // }
 </script>
 

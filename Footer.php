@@ -6,6 +6,14 @@
                     <li class="list-group-item footerLI"><a  href="index.php">Home</a></li>
                     <li class="list-group-item footerLI"><a  href="Store.php">Store</a></li>
                     <li class="list-group-item footerLI"><a  href="Contact.php">Contact</a></li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <ul class="list-group list-group-horizontal justify-content-center">
+                    <li class="list-group-item footerLI"><a  href="Terms-Conditions.php">Algemene voorwaardes & levertijden</a></li>
                 </ul>
             </div>
         </div>

@@ -15,6 +15,6 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {
 //    echo "little problem";
-    header("Location: " . "http://" . $_SERVER['HTTP_HOST'] . "/printsbylinda/error-page.php");
+    header("Location: " . "http://" . $_SERVER['HTTP_HOST'] . "/error-page.php");
 }
 ?>
