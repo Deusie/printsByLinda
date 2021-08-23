@@ -284,11 +284,79 @@ if ($_POST["itemID"] != null) {
             <li class="breadcrumb-item active" aria-current="page">Betalen</li>
         </ol>
     </nav>
+    <div class="col" id="paymentMethodContainer">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card" style="border: 1px solid rgba(0, 0, 0, .125);border-radius: .25rem">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Betalen met:</h5>
+                        <ul class="list-group list-group-flush mb-4">
+                            <?php
+                            /*
+                             * How to get the currently activated payment methods for the Payments API.
+                             */
+
+                            try {
+                                /*
+                                 * Initialize the Mollie API library with your API key.
+                                 *
+                                 * See: https://www.mollie.com/dashboard/developers/api-keys
+                                 */
+                                require "config/initialize.php";
+                                /*
+                                 * Get all the activated methods for this API key.
+                                 * By default we are using the resource "payments".
+                                 * See the orders folder for an example with the Orders API.
+                                 */
+                                $methods = $mollie->methods->allActive();
+                                foreach ($methods as $method) {
+                                    echo '<li class="list-group-item">';
+                                    echo '<img src="' . htmlspecialchars($method->image->size1x) . '" srcset="' . htmlspecialchars($method->image->size2x) . ' 2x"> ';
+                                    echo htmlspecialchars($method->description);
+                                    echo '</li>';
+                                }
+                            } catch (\Mollie\Api\Exceptions\ApiException $e) {
+                                echo "API call failed: " . htmlspecialchars($e->getMessage());
+                            }
+                            ?>
+                        </ul>
+                        <button class="createGlobalPayment btn btn-primary">Betalen</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card" style="border: 1px solid rgba(0, 0, 0, .125);border-radius: .25rem">
+                    <div class="card-body">
+                        <h5 class="card-title">Betalen met factuur</h5>
+                        <ul class="list-group list-group-flush mb-4">
+                            <li class="list-group-item">Volg de stappen in uw mail</li>
+                            <li class="list-group-item">En maak het geld handmatig over</li>
+                        </ul>
+                        <button class="factuurBetaling btn btn-primary">Stuur factuur</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    <button class="testje">knoppie</button>-->
 </div>
 
 <script>
     Cart = window.sessionStorage;
 
+    $(document).ready(function(){
+        fillArrays();
+        prices.forEach(calcTotalPrice);
+        $("form").on("submit", function(event){
+            event.preventDefault();
+
+            formValues = $(this).serializeArray();
+            document.getElementById('nameDisplay').innerText = formValues[0].value+" "+formValues[1].value+" "+formValues[2].value;
+            document.getElementById('mailDisplay').innerText = formValues[3].value;
+            document.getElementById('straatNrDisplay').innerText = formValues[4].value+" "+formValues[5].value;
+            document.getElementById('plaatsCodeDisplay').innerText = formValues[6].value+" "+formValues[7].value;
+        });
+    });
 
     $(document).on('click', '.aantal', function(){
         var cartID = $(this).data("order");
@@ -316,49 +384,62 @@ if ($_POST["itemID"] != null) {
         cartColors[cartID]= $(this).children("div").css("background-color");
     });
 
-    $(document).ready(function(){
-        fillArrays();
-        prices.forEach(calcTotalPrice);
-        $("form").on("submit", function(event){
-            event.preventDefault();
+    $(document).on('click', '.createGlobalPayment', function(){
+        $(this).attr("disabled", true);
+        $(this).attr("disabled", true);
+        var ids = "";
+        for (var i = 0; i < Cart.length; i++){
+            ids += Cart.getItem(Cart.key(i)) + ",";
+        }
+        ids = ids.substring(0, ids.length - 1);
+        $.post('CreateGlobalPayment.php', {
+                itemID:ids,
+                TotalPrice: totalPrice,
+                inputVoornaam:formValues[0].value,
+                inputTussenvoegsel:formValues[1].value,
+                inputAchternaam:formValues[2].value,
+                inputEmail:formValues[3].value,
+                inputStraatNaam:formValues[4].value,
+                inputHuisNummer:formValues[5].value,
+                inputPlaats:formValues[6].value,
+                inputPostcode:formValues[7].value,
+                inputInstructies:formValues[8].value,
+                inputAantal:cartAantal,
+                inputSizes:cartSizes,
+                inputColors:cartColors,
+            },
+            function(returnedData){
+                $('#paymentMethodContainer').html(returnedData);
+            });
+    });
 
-            formValues = $(this).serializeArray();
-            document.getElementById('nameDisplay').innerText = formValues[0].value+" "+formValues[1].value+" "+formValues[2].value;
-            document.getElementById('mailDisplay').innerText = formValues[3].value;
-            document.getElementById('straatNrDisplay').innerText = formValues[4].value+" "+formValues[5].value;
-            document.getElementById('plaatsCodeDisplay').innerText = formValues[6].value+" "+formValues[7].value;
-        });
+    $(document).on('click', '.factuurBetaling', function(){
+        $(this).attr("disabled", true);
+        var ids = "";
+        for (var i = 0; i < Cart.length; i++){
+            ids += Cart.getItem(Cart.key(i)) + ",";
+        }
+        ids = ids.substring(0, ids.length - 1);
+        $.post('CartMail.php', {
+                itemID:ids,
+                inputVoornaam:formValues[0].value,
+                inputTussenvoegsel:formValues[1].value,
+                inputAchternaam:formValues[2].value,
+                inputEmail:formValues[3].value,
+                inputStraatNaam:formValues[4].value,
+                inputHuisNummer:formValues[5].value,
+                inputPlaats:formValues[6].value,
+                inputPostcode:formValues[7].value,
+                inputInstructies:formValues[8].value,
+                inputAantal:cartAantal,
+                inputSizes:cartSizes,
+                inputColors:cartColors,
+                TotalPrice:totalPrice,
+            },
 
-        $(document).on('click', '.bestellen', function(){
-            $(this).attr("disabled", true);
-            var ids = "";
-            for (var i = 0; i < Cart.length; i++){
-                ids += Cart.getItem(Cart.key(i)) + ",";
-            }
-            ids = ids.substring(0, ids.length - 1);
-            $.ajax({
-                url:"CartMail.php",
-                method:"POST",
-                data:{itemID:ids, inputVoornaam:formValues[0].value,
-                    inputTussenvoegsel:formValues[1].value,
-                    inputAchternaam:formValues[2].value,
-                    inputEmail:formValues[3].value,
-                    inputStraatNaam:formValues[4].value,
-                    inputHuisNummer:formValues[5].value,
-                    inputPlaats:formValues[6].value,
-                    inputPostcode:formValues[7].value,
-                    inputInstructies:formValues[8].value,
-                    inputAantal:cartAantal,
-                    inputSizes:cartSizes,
-                    inputColors:cartColors,
-                    TotalPrice:totalPrice,
-                },
-                success:function(data)
-                {
-                    $('#dropCont').html(data);
-                }
-            })
-        });
+            function(returnedData){
+                $('#dropCont').html(returnedData);
+            });
     });
 
     function fillArrays(){
@@ -392,6 +473,13 @@ if ($_POST["itemID"] != null) {
         document.getElementById('priceText2'+index).innerText = (Math.round((pricePerCartId + Number.EPSILON) * 100) / 100).toString() + "€";
         document.getElementById('totalPriceText').innerHTML = (Math.round((totalPrice + Number.EPSILON) * 100) / 100).toString() + "€";
         document.getElementById('totalPriceText2').innerHTML = (Math.round((totalPrice + Number.EPSILON) * 100) / 100).toString() + "€";
+    }
+
+    function selectMethod(paymentMethod){
+        if (paymentMethod === "ideal"){
+            document.getElementById('idealContainer').style.display = "block";
+            document.getElementById('paymentMethodContainer').style.display = "none";
+        }
     }
 
     function showStep(cart, form, info, pay){

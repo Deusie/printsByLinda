@@ -12,12 +12,15 @@ require 'config/EmailCredentials.php';
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf.php');
 require_once('config/configdbPDO.php');
+require "config/initialize.php";
 
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+try {
+    /*
+     * Generate a unique order id for this example. It is important to include this unique attribute
+     * in the redirectUrl (below) so a proper return page can be shown to the customer.
+     */
     $orderId = time();
 
-    //define input variables
     $voorNaam = filter_var ( $_POST['inputVoornaam'], FILTER_SANITIZE_STRING);
     $Tussenvoegsel = filter_var ( $_POST['inputTussenvoegsel'], FILTER_SANITIZE_STRING);
     $Achternaam = filter_var ( $_POST['inputAchternaam'], FILTER_SANITIZE_STRING);
@@ -38,8 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $Rekeningnummer = "NL25 ABNA 0102 9630 88";
 
-
-// create new PDF document
+    // create new PDF document
     $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 // set document information
@@ -88,16 +90,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // set cell margins
     $pdf->setCellMargins(1, 2, 1, 1);
-
-    $html = '<p>
-                <br>
-                Hallo '.$voorNaam.',<br><br>
-                Hartelijk bedankt voor je bestelling en het vertrouwen in ons!<br>
-                Hieronder vind je het overzicht van je bestelling:<br>
-            </p>';
-
-// output the HTML content
-    $pdf->writeHTML($html, true, false, true, false, '');
 
 // set color for background
     $pdf->SetFillColor(120, 172, 255);
@@ -192,16 +184,6 @@ td {
     $pdf->MultiCell(100, 10, "BTW: ".round($BTW, 2), 'B', 'J', 0, 1, '', '', true, 0, false, true, 10, 'M');
     $pdf->MultiCell(100, 10, "TOTAAL: ".round($totalPrice, 2), 0, 'J', 1, 1, '', '', true, 0, false, true, 10, 'M');
 
-    $html = '
-<p>
-    Het totaal bedrag kunt u over maken naar<br> 
-    Rekeningnummer: '.$Rekeningnummer.'<br>
-    T.n.v. Prints By Linda<br>
-    Onder vermelding van: '. $orderId .'<br> 
-</p>
-
-';
-
 // output the HTML content
     $pdf->writeHTML($html, true, false, true, false, '');
 
@@ -219,6 +201,7 @@ td {
 //        mkdir($fileLocation);
 //    }
 //    $fileNL = $fileLocation."\\".$filename;
+//    $pdf->Output($fileNL, 'F');
 
     //Server
     $orderFolderPath = __DIR__ ."/"."Orders";
@@ -227,64 +210,55 @@ td {
         mkdir($fileLocation);
     }
     $fileNL = $fileLocation."/".$filename;
+    $pdf->Output($fileNL, 'F');
 
-    $pdfFile = $pdf->Output('Factuur.pdf', 'S');
 
-    //Create an instance; passing `true` enables exceptions
-    $mail = new PHPMailer(true);
 
-    try {
-        //Server settings
-        //$mail->SMTPDebug = 4;                      //Enable verbose debug output
-        $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = 'mail.printsbylinda.com';                     //Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        $mail->Username   = EMAIL;                     //SMTP username
-        $mail->Password   = PASS;                               //SMTP password
-        $mail->SMTPSecure = 'TLS';            //Enable implicit TLS encryption
-        $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-        //Recipients
-        $mail->setFrom(EMAIL, 'PrintsByLinda');
-        $mail->addAddress($eMail);
-        $mail->addReplyTo(EMAIL, 'Information');
 
-        //Attachments
-        $mail->addStringAttachment($pdfFile, 'Factuur.pdf');
+    /*
+     * Determine the url parts to these example files.
+     */
+    $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
+    $hostname = $_SERVER['HTTP_HOST'];
+    $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
 
-        //Content
-        $mail->Subject = 'bedankt voor u bestelling!!';
-        $mail->Body = '<p>
-                Hallo '.$voorNaam.',<br>
-                Wat super leuk dat je bij ons hebt besteld!!<br>
-                We hebben je bestelling in goede orde ontvangen en<br>
-                zodra de betaling binnen is gaan we direct aan de slag<br>
-                <br>
-                Al onze producten worden met de hand gemaakt<br>
-                Waardoor wij een leveringstijd hanteren van 3 a 4 dagen<br>
-                alvast bedankt voor u geduld <br>
-            </p>';
-        $mail->AltBody = 'Er is een fout opgetreden probeer het nog is';
+    /*
+     * Payment parameters:
+     *   amount        Amount in EUROs. This example creates a € 10,- payment.
+     *   description   Description of the payment.
+     *   redirectUrl   Redirect location. The customer will be redirected there after the payment.
+     *   webhookUrl    Webhook location, used to report when the payment changes state.
+     *   metadata      Custom metadata that is stored with the payment.
+     */
+    $payment = $mollie->payments->create([
+        "amount" => [
+            "currency" => "EUR",
+            "value" => $totalPrice, // You must send the correct number of decimals, thus we enforce the use of strings
+        ],
+        "description" => "Order #{$orderId}",
+        "redirectUrl" => "{$protocol}://{$hostname}{$path}OrderConfirmation.php?order_id={$orderId}",
+        "webhookUrl" => "{$protocol}://{$hostname}{$path}WebhookHandler.php",
+        "metadata" => [
+            "order_id" => $orderId,
+            "emailAdress" => $eMail,
+        ],
+    ]);
 
-        $mail->send();
-        //save pdf to server
-        $pdf->Output($fileNL, 'F');
-        echo'
-        <div class="row text-center mt-5">
-            <div class="col">
-                <h1>BEDANKT VOOR U BESTELLING!!</h1>
-            </div>
-        </div>
-        <div class="row mt-5 mb-5 text-center">
-            <div class="col">
-                <h4 class="mt-4 mb-5">Gelieve de stappen in uw mail te volgen</h4>
-                <h6 class="mb-5">Dan gaan wij alvast met u bestelling aan de slag :)</h6>
-            </div>
-        </div>';
-
-    } catch (Exception $e) {
-        echo "<h2>Er is iets fout gegaan controleer uw gegevens en probeer het opnieuw</h2>" . "<br>";
-        echo "<h2>Als dit probleem zich voor blijft doen neem dan contact met ons op</h2>";
-    }
+    /*
+     * Send the customer off to complete the payment.
+     * This request should always be a GET, thus we enforce 303 http response code
+     */
+    $payURL = $payment->getCheckoutUrl();
+    echo "<p id='url' class='$payURL'>even geduld u word doorgestuurd...</p>";
+    echo "<p>als dit te lang duur druk dan <a href='$payURL'>hier</a></p>";
+} catch (\Mollie\Api\Exceptions\ApiException $e) {
+    echo "API call failed: " . htmlspecialchars($e->getMessage());
 }
 ?>
+<script>
+    $(document).ready(function(){
+        window.location.href = document.getElementById("url").className;
+    });
+</script>
+
