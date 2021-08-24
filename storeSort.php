@@ -5,7 +5,7 @@ include 'config/configdbPDO.php';
 $data = $conn->query("SELECT * FROM product ORDER BY ".$_POST["column_name"]." ".$_POST["order"]."")->fetchAll();
 
 foreach ($data as $row) {
-    include ('storeSortDisplay.php');
+    include('sortDisplay.php');
 }
 ?>
 <script>

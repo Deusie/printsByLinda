@@ -3,7 +3,7 @@
         <?php
         if (empty($row["Back_IMG"])) {
             ?>
-            <a target="_blank" class="mb-4"href="ItemView.php?product= <?=$row["ID"]?>">
+            <a class="mb-4"href="ItemView.php?product= <?=$row["ID"]?>">
                 <img src="assets/product-images/<?=$row["Front_IMG"]?>" class="card-img-top mt-4" alt="...">
             </a>
             <div class="card-body" style="background: white">

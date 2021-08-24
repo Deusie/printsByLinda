@@ -60,7 +60,7 @@ theme_header('store');
         $data = $conn->query("SELECT * FROM product ORDER BY ID DESC")->fetchAll();
 
         foreach ($data as $row) {
-            include ('storeSortDisplay.php');
+            include('sortDisplay.php');
         }
         ?>
     </div>

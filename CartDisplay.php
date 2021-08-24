@@ -195,8 +195,10 @@ if ($_POST["itemID"] != null) {
                 <textarea class="form-control" id="inputInstructies" name="inputInstructies" rows="3"></textarea>
             </div>
         </div>
-
-        <button type="submit" onclick="showStep('none','none','block','none')" class="btn btn-primary">Volgende</button>
+        <div style="display: none" id="errorForm" class="alert alert-danger mb-3" role="alert">
+            Vul alle velden in!
+        </div>
+        <button type="submit" class="btn btn-primary">Volgende</button>
     </form>
 </div>
 
@@ -209,11 +211,12 @@ if ($_POST["itemID"] != null) {
         </ol>
     </nav>
     <div class="jumbotron text-center">
-        <h2 class="display-4 mb-5">Uw gegevens</h2>
-        <p class="lead" id="nameDisplay">hier komt de info die je kunt checken</p>
-        <p class="lead" id="mailDisplay">hier komt de info die je kunt checken</p>
-        <p class="lead" id="straatNrDisplay">hier komt de info die je kunt checken</p>
-        <p class="lead mb-5" id="plaatsCodeDisplay">hier komt de info die je kunt checken</p>
+        <h2 class="display-4 mb-5">Controlleer uw gegevens</h2>
+        <p class="lead" id="nameDisplay">voor en achternaam</p>
+        <p class="lead" id="mailDisplay">emailadres</p>
+        <p class="lead" id="straatNrDisplay">straatnaam en huisnummer</p>
+        <p class="lead" id="plaatsCodeDisplay">plaatsnaam en postcode</p>
+        <a style="text-decoration: none" onclick="showStep('none','block','none', 'none')" href="#" class="lead mb-3">Gegevens aanpassen</a>
         <?php
         foreach ($data as $row){
         ?>
@@ -351,10 +354,47 @@ if ($_POST["itemID"] != null) {
             event.preventDefault();
 
             formValues = $(this).serializeArray();
-            document.getElementById('nameDisplay').innerText = formValues[0].value+" "+formValues[1].value+" "+formValues[2].value;
-            document.getElementById('mailDisplay').innerText = formValues[3].value;
-            document.getElementById('straatNrDisplay').innerText = formValues[4].value+" "+formValues[5].value;
-            document.getElementById('plaatsCodeDisplay').innerText = formValues[6].value+" "+formValues[7].value;
+            if (formValues[0].value !== "") {
+                if (formValues[2].value !== "") {
+                    if (formValues[3].value !== "") {
+                        if (formValues[4].value !== "") {
+                            if (formValues[5].value !== "") {
+                                if (formValues[6].value !== "") {
+                                    if (formValues[7].value !== "") {
+                                        document.getElementById("errorForm").style.display = "none";
+                                        showStep("none", "none", "block", "none")
+                                        document.getElementById('nameDisplay').innerText = formValues[0].value+" "+formValues[1].value+" "+formValues[2].value;
+                                        document.getElementById('mailDisplay').innerText = formValues[3].value;
+                                        document.getElementById('straatNrDisplay').innerText = formValues[4].value+" "+formValues[5].value;
+                                        document.getElementById('plaatsCodeDisplay').innerText = formValues[6].value+" "+formValues[7].value;
+                                    }else{
+                                        document.getElementById("errorForm").innerText = "Vul een postcode in";
+                                        document.getElementById("errorForm").style.display = "block";
+                                    }
+                                }else{
+                                    document.getElementById("errorForm").innerText = "Vul een plaats in";
+                                    document.getElementById("errorForm").style.display = "block";
+                                }
+                            }else{
+                                document.getElementById("errorForm").innerText = "Vul een huisnummer in";
+                                document.getElementById("errorForm").style.display = "block";
+                            }
+                        }else{
+                            document.getElementById("errorForm").innerText = "Vul een Straatnaam in";
+                            document.getElementById("errorForm").style.display = "block";
+                        }
+                    }else{
+                        document.getElementById("errorForm").innerText = "Vul een geldig e-mail adres in";
+                        document.getElementById("errorForm").style.display = "block";
+                    }
+                }else{
+                    document.getElementById("errorForm").innerText = "Vul een achternaam in";
+                    document.getElementById("errorForm").style.display = "block";
+                }
+            }else{
+                document.getElementById("errorForm").innerText = "Vul een voornaam in";
+                document.getElementById("errorForm").style.display = "block";
+            }
         });
     });
 
