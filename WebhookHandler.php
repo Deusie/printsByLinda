@@ -24,13 +24,13 @@ try {
      */
     $payment = $mollie->payments->get($paymentID);
     $orderId = $payment->metadata->order_id;
-    $eMail = $payment->metadata->emailAdress;
+    $eMailadress = $payment->metadata->emailAdress;
 
     if ($payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks()) {
         /*
-         * The payment is paid and isn't refunded or charged back.
-         * At this point you'd probably want to start the process of delivering the product to the customer.
-         */
+                 * The payment is paid and isn't refunded or charged back.
+                 * At this point you'd probably want to start the process of delivering the product to the customer.
+                 */
         //Create an instance; passing `true` enables exceptions
         $mail = new PHPMailer(true);
 
@@ -47,13 +47,19 @@ try {
 
             //Recipients
             $mail->setFrom(EMAIL, 'PrintsByLinda');
-            $mail->addAddress($eMail);
+            $mail->addAddress($eMailadress);
             $mail->addReplyTo(EMAIL, 'Information');
 
             //Content
-            $mail->Subject = 'bedankt voor u bestelling!!';
+            $mail->Subject = 'confirmatie Bestelling #'. $orderId;
             $mail->Body = '<p>
-                confirmatie van u bestelling
+                Hallo,
+                We hebben uw betalling in goede orde ontvangen<br>
+                en zijn nu hard bezig met uw bestelling<br>
+                <br>
+                Al onze producten worden met de hand gemaakt<br>
+                Waardoor wij een leveringstijd hanteren van 3 a 4 dagen<br>
+                alvast bedankt voor u geduld <br>
             </p>';
             $mail->AltBody = 'confirmatie van u bestelling';
 
@@ -62,7 +68,6 @@ try {
         } catch (Exception $e) {
             echo $e;
         }
-
     } elseif ($payment->isOpen()) {
         /*
          * The payment is open.

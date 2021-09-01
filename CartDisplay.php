@@ -210,8 +210,8 @@ if ($_POST["itemID"] != null) {
             <li class="breadcrumb-item active" aria-current="page">Gegevens controleren</li>
         </ol>
     </nav>
-    <div class="jumbotron text-center">
-        <h2 class="display-4 mb-5">Controlleer uw gegevens</h2>
+    <div id="jumboTronContainer" class="jumbotron text-center">
+        <h2 class="display-4 mb-5">Controleer uw gegevens</h2>
         <p class="lead" id="nameDisplay">voor en achternaam</p>
         <p class="lead" id="mailDisplay">emailadres</p>
         <p class="lead" id="straatNrDisplay">straatnaam en huisnummer</p>
@@ -274,74 +274,8 @@ if ($_POST["itemID"] != null) {
             <p class="text-center float-left">Totaal: </p>
             <p id="totalPriceText2" class="text-right">0.00€</p>
         </div>
-        <button onclick="showStep('none','none','none','block')" class="btn btn-primary btn-lg">Door naar betalen</button>
+        <button class="btn btn-primary btn-lg createGlobalPayment">Door naar betalen</button>
     </div>
-</div>
-
-<div id="paymentContainer" class="row" style="display: none">
-    <nav class="mb-5" aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li onclick="showStep('block', 'none', 'none', 'none')" class="breadcrumb-item"><a href="#">Winkelwagen</a></li>
-            <li onclick="showStep('none','block','none', 'none')" class="breadcrumb-item"><a href="#">Bezorgadres</a></li>
-            <li onclick="showStep('none','none','block', 'none')" class="breadcrumb-item"><a href="#">Gegevens controleren</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Betalen</li>
-        </ol>
-    </nav>
-    <div class="col" id="paymentMethodContainer">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="card" style="border: 1px solid rgba(0, 0, 0, .125);border-radius: .25rem">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Betalen met:</h5>
-                        <ul class="list-group list-group-flush mb-4">
-                            <?php
-                            /*
-                             * How to get the currently activated payment methods for the Payments API.
-                             */
-
-                            try {
-                                /*
-                                 * Initialize the Mollie API library with your API key.
-                                 *
-                                 * See: https://www.mollie.com/dashboard/developers/api-keys
-                                 */
-                                require "config/initialize.php";
-                                /*
-                                 * Get all the activated methods for this API key.
-                                 * By default we are using the resource "payments".
-                                 * See the orders folder for an example with the Orders API.
-                                 */
-                                $methods = $mollie->methods->allActive();
-                                foreach ($methods as $method) {
-                                    echo '<li class="list-group-item">';
-                                    echo '<img src="' . htmlspecialchars($method->image->size1x) . '" srcset="' . htmlspecialchars($method->image->size2x) . ' 2x"> ';
-                                    echo htmlspecialchars($method->description);
-                                    echo '</li>';
-                                }
-                            } catch (\Mollie\Api\Exceptions\ApiException $e) {
-                                echo "API call failed: " . htmlspecialchars($e->getMessage());
-                            }
-                            ?>
-                        </ul>
-                        <button class="createGlobalPayment btn btn-primary">Betalen</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="card" style="border: 1px solid rgba(0, 0, 0, .125);border-radius: .25rem">
-                    <div class="card-body">
-                        <h5 class="card-title">Betalen met factuur</h5>
-                        <ul class="list-group list-group-flush mb-4">
-                            <li class="list-group-item">Volg de stappen in uw mail</li>
-                            <li class="list-group-item">En maak het geld handmatig over</li>
-                        </ul>
-                        <button class="factuurBetaling btn btn-primary">Stuur factuur</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-<!--    <button class="testje">knoppie</button>-->
 </div>
 
 <script>
@@ -362,11 +296,11 @@ if ($_POST["itemID"] != null) {
                                 if (formValues[6].value !== "") {
                                     if (formValues[7].value !== "") {
                                         document.getElementById("errorForm").style.display = "none";
-                                        showStep("none", "none", "block", "none")
                                         document.getElementById('nameDisplay').innerText = formValues[0].value+" "+formValues[1].value+" "+formValues[2].value;
                                         document.getElementById('mailDisplay').innerText = formValues[3].value;
                                         document.getElementById('straatNrDisplay').innerText = formValues[4].value+" "+formValues[5].value;
                                         document.getElementById('plaatsCodeDisplay').innerText = formValues[6].value+" "+formValues[7].value;
+                                        showStep("none", "none", "block", "none")
                                     }else{
                                         document.getElementById("errorForm").innerText = "Vul een postcode in";
                                         document.getElementById("errorForm").style.display = "block";
@@ -449,38 +383,38 @@ if ($_POST["itemID"] != null) {
                 inputColors:cartColors,
             },
             function(returnedData){
-                $('#paymentMethodContainer').html(returnedData);
+                $('#jumboTronContainer').html(returnedData);
             });
     });
 
-    $(document).on('click', '.factuurBetaling', function(){
-        $(this).attr("disabled", true);
-        var ids = "";
-        for (var i = 0; i < Cart.length; i++){
-            ids += Cart.getItem(Cart.key(i)) + ",";
-        }
-        ids = ids.substring(0, ids.length - 1);
-        $.post('CartMail.php', {
-                itemID:ids,
-                inputVoornaam:formValues[0].value,
-                inputTussenvoegsel:formValues[1].value,
-                inputAchternaam:formValues[2].value,
-                inputEmail:formValues[3].value,
-                inputStraatNaam:formValues[4].value,
-                inputHuisNummer:formValues[5].value,
-                inputPlaats:formValues[6].value,
-                inputPostcode:formValues[7].value,
-                inputInstructies:formValues[8].value,
-                inputAantal:cartAantal,
-                inputSizes:cartSizes,
-                inputColors:cartColors,
-                TotalPrice:totalPrice,
-            },
-
-            function(returnedData){
-                $('#dropCont').html(returnedData);
-            });
-    });
+    // $(document).on('click', '.factuurBetaling', function(){
+    //     $(this).attr("disabled", true);
+    //     var ids = "";
+    //     for (var i = 0; i < Cart.length; i++){
+    //         ids += Cart.getItem(Cart.key(i)) + ",";
+    //     }
+    //     ids = ids.substring(0, ids.length - 1);
+    //     $.post('CreateFactuurBetaling.php', {
+    //             itemID:ids,
+    //             inputVoornaam:formValues[0].value,
+    //             inputTussenvoegsel:formValues[1].value,
+    //             inputAchternaam:formValues[2].value,
+    //             inputEmail:formValues[3].value,
+    //             inputStraatNaam:formValues[4].value,
+    //             inputHuisNummer:formValues[5].value,
+    //             inputPlaats:formValues[6].value,
+    //             inputPostcode:formValues[7].value,
+    //             inputInstructies:formValues[8].value,
+    //             inputAantal:cartAantal,
+    //             inputSizes:cartSizes,
+    //             inputColors:cartColors,
+    //             TotalPrice:totalPrice,
+    //         },
+    //
+    //         function(returnedData){
+    //             $('#dropCont').html(returnedData);
+    //         });
+    // });
 
     function fillArrays(){
         for (var i = 0; i < Cart.length; i++){

@@ -213,6 +213,69 @@ td {
     $pdf->Output($fileNL, 'F');
 
 
+    $pdfFile = $pdf->Output('Factuur.pdf', 'S');
+
+    //Create an instance; passing `true` enables exceptions
+    $mail = new PHPMailer(true);
+
+    try {
+        //Server settings
+        //$mail->SMTPDebug = 4;                      //Enable verbose debug output
+        $mail->isSMTP();                                            //Send using SMTP
+        $mail->Host       = 'mail.printsbylinda.com';                     //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->Username   = EMAIL;                     //SMTP username
+        $mail->Password   = PASS;                               //SMTP password
+        $mail->SMTPSecure = 'TLS';            //Enable implicit TLS encryption
+        $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+        //Recipients
+        $mail->setFrom(EMAIL, 'PrintsByLinda');
+        $mail->addAddress($eMail, "lindamizee@gmail.com");
+        $mail->addReplyTo("info@printsbylinda.com", 'PrintsByLinda');
+
+        //Attachments
+        $mail->addStringAttachment($pdfFile, 'Factuur.pdf');
+
+        //Content
+        $mail->Subject = 'uw bestellig #'. $orderId .' bij PrintsByLinda';
+        $mail->Body = '<p>
+                Hallo '.$voorNaam.',<br>
+                Wat leuk dat je bij ons hebt besteld!!<br>
+                We hebben je bestelling in goede orde ontvangen en<br>
+                zodra de betaling binnen is krijg je van ons een mailtje<br>
+                en gaan wij zo snel mogelijk voor je aan de slag<br>
+                <br>
+                <br>
+                <br>
+                Heb je wel betaald maar nog geen confirmatie mailtje?<br>
+                Controleer je spam folder en wacht minimaal 10 minuten<br>
+                 <br>
+                Nog steeds niks binnen?<br>
+                Contact ons via info@printsbylinda.com of reageer op deze mail met je probleem
+            </p>';
+        $mail->AltBody = 'Er is een fout opgetreden probeer het nog is';
+
+        $mail->send();
+        //save pdf to server
+        $pdf->Output($fileNL, 'F');
+        echo'
+        <div class="row text-center mt-5">
+            <div class="col">
+                <h1>BEDANKT VOOR U BESTELLING!!</h1>
+            </div>
+        </div>
+        <div class="row mt-5 mb-5 text-center">
+            <div class="col">
+                <h4 class="mt-4 mb-5">Gelieve de stappen in uw mail te volgen</h4>
+                <h6 class="mb-5">Dan gaan wij alvast met u bestelling aan de slag :)</h6>
+            </div>
+        </div>';
+
+    } catch (Exception $e) {
+        echo "<h2>Er is iets fout gegaan controleer uw gegevens en probeer het opnieuw</h2>" . "<br>";
+        echo "<h2>Als dit probleem zich voor blijft doen neem dan contact met ons op</h2>";
+    }
 
 
 
