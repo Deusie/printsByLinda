@@ -13,7 +13,6 @@
         -webkit-column-count: 2;
         -moz-column-count: 2;
         column-count: 2;
-        background-color: red;
     }
 }
 .my-dropdown-toggle::after {

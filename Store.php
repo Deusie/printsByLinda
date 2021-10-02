@@ -33,15 +33,20 @@ include('NavBar.php');
 theme_header('store');
 ?>
 
-<div class="container-fluid p-0">
-<div class="container mt-3 ">
+<div class="container mt-3" id="sortContainer" style="display: none">
     <div class="row text-center">
-        <div class="col-xl-9 col-lg-9 d-none d-md-block">
-
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-2 col-2">
+            <a href="Store.php" style=" width: 16rem; color: black; background-color: white; border-radius: 20px 20px 20px 20px;-moz-border-radius: 20px 20px 20px 20px;-webkit-border-radius: 20px 20px 20px 20px;border: 1px solid black;" class="btn btn-secondary shadow-none d-none d-md-block" type="button" >
+                <i class="bi bi-caret-left-fill float-left"></i>
+                <p class="p-0 m-0">GO BACK</p>
+            </a>
+            <a href="Store.php" style="color: black; background-color: white; border-radius: 20px 20px 20px 20px;-moz-border-radius: 20px 20px 20px 20px;-webkit-border-radius: 20px 20px 20px 20px;border: 1px solid black;" class="btn btn-secondary shadow-none d-md-none" type="button" >
+                <i class="bi bi-caret-left-fill float-left"></i>
+            </a>
         </div>
-        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
             <div class="dropdown shadow-none">
-                <button style=" width: 16rem; color: black; background-color: white; border-radius: 20px 20px 20px 20px;-moz-border-radius: 20px 20px 20px 20px;-webkit-border-radius: 20px 20px 20px 20px;border: 1px solid #black;" class="btn btn-secondary dropdown-toggle shadow-none" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button style=" width: 16rem; color: black; background-color: white; border-radius: 20px 20px 20px 20px;-moz-border-radius: 20px 20px 20px 20px;-webkit-border-radius: 20px 20px 20px 20px;border: 1px solid black;" class="btn btn-secondary dropdown-toggle shadow-none" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Sort by latest
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -54,13 +59,53 @@ theme_header('store');
     </div>
 </div>
 
-<div class="container mb-5 mt-3">
+<div class="container mb-5 mt-3" style="min-height: 700px"">
     <div id="storeContent" class="row">
+        <div class="col-12">
+            <p style="font-size: 20px" class="font-weight-bold mb-3">Categorieën</p>
+        </div>
+
         <?php
-        $data = $conn->query("SELECT * FROM product ORDER BY ID DESC")->fetchAll();
+        //loop through all the categories
+
+        $data = $conn->query("SELECT * FROM categorie ORDER BY ID ASC")->fetchAll();
 
         foreach ($data as $row) {
-            include('sortDisplay.php');
+            ?>
+        <div  class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
+            <div id="<?=$row["ID"]?>" class="card mb-3 p-3 categorieSort" style="cursor: pointer; max-width: 540px; border: 1px solid rgba(0, 0, 0, .125); border-radius: .25rem; height: 90%">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <img class="card-img" src="assets/product-images/<?=$row["CategorieIMG"]?>">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <p class="card-title text-center"><?=$row["CategorieNaam"]?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+        }
+        //loop through all the SUB-categories
+
+        $data1 = $conn->query("SELECT * FROM subcategorie ORDER BY ID ASC")->fetchAll();
+
+        foreach ($data1 as $row) {
+            ?>
+            <div  class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6">
+                <div id="<?=$row["SubCategorieNaam"]?>" class="card mb-3 p-3 subcategorieSort" style="cursor: pointer; max-width: 540px; border: 1px solid rgba(0, 0, 0, .125); border-radius: .25rem; height: 90%">
+                    <div class="row no-gutters">
+                        <div class="col-md-12">
+                            <div class="card-body">
+                                <p class="card-title text-center"><?=$row["SubCategorieNaam"]?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php
         }
         ?>
     </div>
@@ -73,6 +118,39 @@ include("Footer.php");
 ?>
 </body>
 <script>
+
+    var categorieID;
+    var subcategorieID;
+    $(document).on('click', '.categorieSort', function(){
+
+        categorieID = $(this).attr("id");
+        $.ajax({
+            url:"storeSort.php",
+            method:"POST",
+            data:{categorieID:categorieID},
+            success:function(data)
+            {
+                $('#sortContainer').show();
+                $('#storeContent').html(data);
+            }
+        })
+    });
+
+    $(document).on('click', '.subcategorieSort', function(){
+
+        subcategorieID = $(this).attr("id");
+        $.ajax({
+            url:"storeSort.php",
+            method:"POST",
+            data:{subcategorieID:subcategorieID},
+            success:function(data)
+            {
+                $('#sortContainer').show();
+                $('#storeContent').html(data);
+            }
+        })
+    });
+
     $(document).on('click', '.sortOption', function(){
 
         var column_name = $(this).attr("id");
@@ -81,7 +159,7 @@ include("Footer.php");
         $.ajax({
             url:"storeSort.php",
             method:"POST",
-            data:{column_name:column_name, order:order},
+            data:{column_name:column_name, order:order, categorieID:categorieID},
             success:function(data)
             {
                 $('#storeContent').html(data);

@@ -38,7 +38,7 @@ try {
 
     $IDS = filter_var ( $_POST["itemID"], FILTER_SANITIZE_STRING);
     $totalPrice = filter_var ( $_POST["TotalPrice"], FILTER_SANITIZE_STRING);
-
+    $totalPriceCheck = 0;
     $Rekeningnummer = "NL25 ABNA 0102 9630 88";
 
     // create new PDF document
@@ -158,6 +158,7 @@ td {
     $data = $conn->query("SELECT * FROM product WHERE ID IN (" . $IDS . ") ORDER BY ID ASC")->fetchAll();
     $i = 0;
     foreach ($data as $row) {
+        $totalPriceCheck = $aantalArr[$i] * $row['Price'];
         $tbl .= '
     <tr>
         <td>'.$aantalArr[$i].'</td>
@@ -184,129 +185,129 @@ td {
     $pdf->MultiCell(100, 10, "BTW: ".round($BTW, 2), 'B', 'J', 0, 1, '', '', true, 0, false, true, 10, 'M');
     $pdf->MultiCell(100, 10, "TOTAAL: ".round($totalPrice, 2), 0, 'J', 1, 1, '', '', true, 0, false, true, 10, 'M');
 
-// output the HTML content
-    $pdf->writeHTML($html, true, false, true, false, '');
-
 
 // move pointer to last page
     $pdf->lastPage();
+    if ($totalPriceCheck == $totalPrice){
 
-//Close and output PDF document
-    $filename= $orderId.".pdf";
+    //Close and output PDF document
+        $filename= $orderId.".pdf";
 
-    //xampp
-//    $orderFolderPath = "C:\\xampp\\htdocs\\printsbylinda\\Orders";
-//    $fileLocation = $orderFolderPath . "\\" .str_replace("/", "", date("m/Y"));
-//    if (!file_exists($fileLocation)){
-//        mkdir($fileLocation);
-//    }
-//    $fileNL = $fileLocation."\\".$filename;
-//    $pdf->Output($fileNL, 'F');
+        //xampp
+    //    $orderFolderPath = "C:\\xampp\\htdocs\\printsbylinda\\Orders";
+    //    $fileLocation = $orderFolderPath . "\\" .str_replace("/", "", date("m/Y"));
+    //    if (!file_exists($fileLocation)){
+    //        mkdir($fileLocation);
+    //    }
+    //    $fileNL = $fileLocation."\\".$filename;
+    //    $pdf->Output($fileNL, 'F');
 
-    //Server
-    $orderFolderPath = __DIR__ ."/"."Orders";
-    $fileLocation = $orderFolderPath."/". str_replace("/", "", date("m/Y"));
-    if (!file_exists($fileLocation)){
-        mkdir($fileLocation);
-    }
-    $fileNL = $fileLocation."/".$filename;
-    $pdf->Output($fileNL, 'F');
-
-
-    $pdfFile = $pdf->Output('Factuur.pdf', 'S');
-
-    //Create an instance; passing `true` enables exceptions
-    $mail = new PHPMailer(true);
-
-    try {
-        //Server settings
-        //$mail->SMTPDebug = 4;                      //Enable verbose debug output
-        $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = 'mail.printsbylinda.com';                     //Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        $mail->Username   = EMAIL;                     //SMTP username
-        $mail->Password   = PASS;                               //SMTP password
-        $mail->SMTPSecure = 'TLS';            //Enable implicit TLS encryption
-        $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-        //Recipients
-        $mail->setFrom(EMAIL, 'PrintsByLinda');
-        $mail->addAddress($eMail, "lindamizee@gmail.com");
-        $mail->addReplyTo("info@printsbylinda.com", 'PrintsByLinda');
-
-        //Attachments
-        $mail->addStringAttachment($pdfFile, 'Factuur.pdf');
-
-        //Content
-        $mail->Subject = 'uw bestellig #'. $orderId .' bij PrintsByLinda';
-        $mail->Body = '<p>
-                Hallo '.$voorNaam.',<br>
-                Wat leuk dat je bij ons hebt besteld!!<br>
-                We hebben je bestelling in goede orde ontvangen en<br>
-                zodra de betaling binnen is krijg je van ons een mailtje<br>
-                en gaan wij zo snel mogelijk voor je aan de slag<br>
-                <br>
-                <br>
-                <br>
-                Heb je wel betaald maar nog geen confirmatie mailtje?<br>
-                Controleer je spam folder en wacht minimaal 10 minuten<br>
-                 <br>
-                Nog steeds niks binnen?<br>
-                Contact ons via info@printsbylinda.com of reageer op deze mail met je probleem
-            </p>';
-        $mail->AltBody = 'Er is een fout opgetreden probeer het nog is';
-
-        $mail->send();
-        //save pdf to server
+        //Server
+        $orderFolderPath = __DIR__ ."/"."Orders";
+        $fileLocation = $orderFolderPath."/". str_replace("/", "", date("m/Y"));
+        if (!file_exists($fileLocation)){
+            mkdir($fileLocation);
+        }
+        $fileNL = $fileLocation."/".$filename;
         $pdf->Output($fileNL, 'F');
-        echo'
-        <div class="row text-center mt-5">
-            <div class="col">
-                <h1>BEDANKT VOOR U BESTELLING!!</h1>
+
+
+        $pdfFile = $pdf->Output('Factuur.pdf', 'S');
+
+        //Create an instance; passing `true` enables exceptions
+        $mail = new PHPMailer(true);
+
+        try {
+            //Server settings
+            //$mail->SMTPDebug = 4;                      //Enable verbose debug output
+            $mail->isSMTP();                                            //Send using SMTP
+            $mail->Host       = 'mail.printsbylinda.com';                     //Set the SMTP server to send through
+            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+            $mail->Username   = EMAIL;                     //SMTP username
+            $mail->Password   = PASS;                               //SMTP password
+            $mail->SMTPSecure = 'TLS';            //Enable implicit TLS encryption
+            $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+            //Recipients
+            $mail->setFrom(EMAIL, 'PrintsByLinda');
+            $mail->addAddress($eMail, "lindamizee@gmail.com");
+            $mail->addReplyTo("info@printsbylinda.com", 'PrintsByLinda');
+
+            //Attachments
+            $mail->addStringAttachment($pdfFile, 'Factuur.pdf');
+
+            //Content
+            $mail->Subject = 'uw bestellig #'. $orderId .' bij PrintsByLinda';
+            $mail->Body = '<p>
+                    Hallo '.$voorNaam.',<br>
+                    Wat leuk dat je bij ons hebt besteld!!<br>
+                    We hebben je bestelling in goede orde ontvangen en<br>
+                    zodra de betaling binnen is krijg je van ons een mailtje<br>
+                    en gaan wij zo snel mogelijk voor je aan de slag<br>
+                    <br>
+                    <br>
+                    <br>
+                    Heb je wel betaald maar nog geen confirmatie mailtje?<br>
+                    Controleer je spam folder en wacht minimaal 10 minuten<br>
+                     <br>
+                    Nog steeds niks binnen?<br>
+                    Contact ons via info@printsbylinda.com of reageer op deze mail met je probleem
+                </p>';
+            $mail->AltBody = 'Er is een fout opgetreden probeer het nog is';
+
+            $mail->send();
+            //save pdf to server
+            $pdf->Output($fileNL, 'F');
+            echo'
+            <div class="row text-center mt-5">
+                <div class="col">
+                    <h1>BEDANKT VOOR U BESTELLING!!</h1>
+                </div>
             </div>
-        </div>
-        <div class="row mt-5 mb-5 text-center">
-            <div class="col">
-                <h4 class="mt-4 mb-5">Gelieve de stappen in uw mail te volgen</h4>
-                <h6 class="mb-5">Dan gaan wij alvast met u bestelling aan de slag :)</h6>
-            </div>
-        </div>';
+            <div class="row mt-5 mb-5 text-center">
+                <div class="col">
+                    <h4 class="mt-4 mb-5">Gelieve de stappen in uw mail te volgen</h4>
+                    <h6 class="mb-5">Dan gaan wij alvast met u bestelling aan de slag :)</h6>
+                </div>
+            </div>';
 
-    } catch (Exception $e) {
-        echo "<h2>Er is iets fout gegaan controleer uw gegevens en probeer het opnieuw</h2>" . "<br>";
-        echo "<h2>Als dit probleem zich voor blijft doen neem dan contact met ons op</h2>";
-    }
-
+        } catch (Exception $e) {
+            echo "<h2>Er is iets fout gegaan controleer uw gegevens en probeer het opnieuw</h2>" . "<br>";
+            echo "<h2>Als dit probleem zich voor blijft doen neem dan contact met ons op</h2>";
+        }
 
 
-    /*
-     * Determine the url parts to these example files.
-     */
-    $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
-    $hostname = $_SERVER['HTTP_HOST'];
-    $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
 
-    /*
-     * Payment parameters:
-     *   amount        Amount in EUROs. This example creates a € 10,- payment.
-     *   description   Description of the payment.
-     *   redirectUrl   Redirect location. The customer will be redirected there after the payment.
-     *   webhookUrl    Webhook location, used to report when the payment changes state.
-     *   metadata      Custom metadata that is stored with the payment.
-     */
-    $payment = $mollie->payments->create([
-        "amount" => [
-            "currency" => "EUR",
-            "value" => $totalPrice, // You must send the correct number of decimals, thus we enforce the use of strings
-        ],
-        "description" => "Order #{$orderId}",
-        "redirectUrl" => "{$protocol}://{$hostname}{$path}OrderConfirmation.php?order_id={$orderId}",
-        "webhookUrl" => "{$protocol}://{$hostname}{$path}WebhookHandler.php",
-        "metadata" => [
-            "order_id" => $orderId,
-            "emailAdress" => $eMail,
-        ],
-    ]);
+        /*
+         * Determine the url parts to these example files.
+         */
+        $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
+        $hostname = $_SERVER['HTTP_HOST'];
+        $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
+
+        /*
+         * Payment parameters:
+         *   amount        Amount in EUROs. This example creates a € 10,- payment.
+         *   description   Description of the payment.
+         *   redirectUrl   Redirect location. The customer will be redirected there after the payment.
+         *   webhookUrl    Webhook location, used to report when the payment changes state.
+         *   metadata      Custom metadata that is stored with the payment.
+         */
+
+        echo "do payment";
+        $payment = $mollie->payments->create([
+            "amount" => [
+                "currency" => "EUR",
+                "value" => $totalPrice, // You must send the correct number of decimals, thus we enforce the use of strings
+            ],
+            "description" => "Order #{$orderId}",
+            "redirectUrl" => "{$protocol}://{$hostname}{$path}OrderConfirmation.php?order_id={$orderId}",
+            "webhookUrl" => "{$protocol}://{$hostname}{$path}WebhookHandler.php",
+            "metadata" => [
+                "order_id" => $orderId,
+                "emailAdress" => $eMail,
+            ],
+        ]);
 
     /*
      * Send the customer off to complete the payment.
@@ -315,6 +316,9 @@ td {
     $payURL = $payment->getCheckoutUrl();
     echo "<p id='url' class='$payURL'>even geduld u word doorgestuurd...</p>";
     echo "<p>als dit te lang duur druk dan <a href='$payURL'>hier</a></p>";
+    }else{
+        echo "Uw betaling is mislukt";
+    }
 } catch (\Mollie\Api\Exceptions\ApiException $e) {
     echo "API call failed: " . htmlspecialchars($e->getMessage());
 }

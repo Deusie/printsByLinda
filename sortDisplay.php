@@ -1,4 +1,4 @@
-<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6 mb-5">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-6 mb-5 mt-3">
     <div class="card h-100">
         <?php
         if (empty($row["Back_IMG"])) {

@@ -37,7 +37,7 @@ theme_header('contact');
                     </p>
 
                     <p class="lead">
-                        <i style="font-style: normal" class="bi bi-envelope-fill"> Lindamizee@msn.com</i>
+                        <i style="font-style: normal" class="bi bi-envelope-fill">info@printsbylinda.com</i>
                     </p>
             </div>
         </div>
